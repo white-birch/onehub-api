@@ -1,12 +1,30 @@
 import { Router } from 'express';
 import { authMiddleware, authAddOns, nextOnError } from '../../middleware';
-import { createUser, deleteUser, getUser, getUsers, updateUser } from './handlers';
+import { signIn, signUp, createUser, deleteUser, getUser, getUsers, updateUser } from './handlers';
 
 import type { User } from 'types';
 
 const { authorizeUserManagement } = authAddOns;
 
 const router = Router();
+
+router.post(
+  '/auth/sign-in',
+  nextOnError(async (req, res) => {
+    const { email, password } = req.body;
+    const { role, token, userId } = await signIn(email, password);
+    res.status(200).cookie('token', token).json({ role, userId });
+  })
+);
+
+router.post(
+  '/auth/sign-up',
+  nextOnError(async (req, res) => {
+    const { email, password } = req.body;
+    const { role, token, userId } = await signUp(email, password);
+    res.status(200).cookie('token', token).json({ role, userId });
+  })
+);
 
 router.get(
   '/users',
@@ -46,7 +64,6 @@ router.put(
   authMiddleware([authorizeUserManagement]),
   nextOnError(async (req, res) => {
     const user: User = {
-      _id: req.params._id,
       email: req.body.email,
       password: req.body.password,
       role: req.body.role,

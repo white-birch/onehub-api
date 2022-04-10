@@ -1,12 +1,12 @@
 import { User } from '../../../db';
 import { BadRequestError, NotFoundError } from '../../../errors';
 import { hash } from '../../../utils/crypto';
-import { validateEmail, validatePassword, validateRole, validateString } from '../../../utils/validators';
+import { validateEmail, validatePassword, validateRole, validateUserId } from '../validators';
 
 import type { User as UserType } from 'types';
 
 const updateUser = async (user: UserType) => {
-  validateString(user._id, 'User id is invalid.');
+  validateUserId(user._id, 'User ID is invalid.');
   validateEmail(user.email, 'User email is invalid.');
   validateRole(user.role, 'User role is invalid.');
 

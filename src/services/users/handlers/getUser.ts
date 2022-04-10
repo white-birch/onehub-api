@@ -1,10 +1,10 @@
 import { omit } from 'lodash';
 import { User } from '../../../db';
 import { NotFoundError } from '../../../errors';
-import { validateString } from '../../../utils/validators';
+import { validateUserId } from '../validators';
 
 const getUser = async (userId: string) => {
-  validateString(userId, 'User id is invalid.');
+  validateUserId(userId, 'User ID is invalid.');
 
   const user = await User.findById(userId);
 

@@ -1,7 +1,7 @@
 import { User } from '../../../db';
 import { UnauthorizedError } from '../../../errors';
 import { compare, sign } from '../../../utils/crypto';
-import { validateEmail, validatePassword } from '../../../utils/validators';
+import { validateEmail, validatePassword } from '../validators';
 
 const signIn = async (email: string, password: string) => {
   try {

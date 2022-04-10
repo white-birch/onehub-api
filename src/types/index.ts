@@ -1,3 +1,8 @@
+export interface Affiliate {
+  _id?: string;
+  name: string;
+}
+
 export enum Role {
   Admin = 'ADMIN',
   Manager = 'MANAGER',

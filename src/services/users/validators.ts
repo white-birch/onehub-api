@@ -1,8 +1,8 @@
-import { BadRequestError } from '../errors';
-import { Role } from '../types';
-import * as regex from './regex';
+import { BadRequestError } from '../../errors';
+import { Role } from '../../types';
+import * as regex from '../../utils/regex';
 
-export const validateString = (value: string | undefined, errorMessage: string) => {
+export const validateUserId = (value: string | undefined, errorMessage: string) => {
   if (typeof value !== 'string' || value.length === 0) {
     const error = new BadRequestError(errorMessage);
     console.error(error);

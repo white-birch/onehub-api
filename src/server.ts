@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
 import cookieParser from 'cookie-parser';
-import { errorHandlingMiddleware, notFoundMiddleware, openApiMiddleware } from './middleware';
-import { auth, docs, users } from './services';
+import { errorHandlingMiddleware, notFoundMiddleware /*, openApiMiddleware*/ } from './middleware';
+import { affiliates, docs, users } from './services';
 
 const api = Router();
 api.use((req, res, next) => {
@@ -9,7 +9,7 @@ api.use((req, res, next) => {
   next();
 });
 api.use('/docs', docs);
-api.use(auth);
+api.use(affiliates);
 api.use(users);
 
 const app = express();

@@ -1,7 +1,7 @@
 import { User } from '../../../db';
 import { BadRequestError } from '../../../errors';
 import { hash } from '../../../utils/crypto';
-import { validateEmail, validatePassword, validateRole } from '../../../utils/validators';
+import { validateEmail, validatePassword, validateRole } from '../validators';
 
 import type { User as UserType } from 'types';
 
