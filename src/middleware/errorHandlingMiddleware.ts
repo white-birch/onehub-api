@@ -2,6 +2,7 @@ import { BadRequestError, InternalServerError, NotFoundError, UnauthorizedError 
 
 import type { Request, Response, NextFunction } from 'express';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const errorHandlingMiddleware = (err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof BadRequestError) return res.status(400).json({ message: 'Bad Request', error: err.message });
   if (err instanceof NotFoundError) return res.status(404).json({ message: 'Not Found', error: err.message });
