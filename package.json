@@ -1,0 +1,14 @@
+{
+  "name": "onehub-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/schmalzs/onehub-api.git",
+  "author": "Scott Schmalz",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "express": "^4.17.3"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.3"
+  }
+}
