@@ -5,10 +5,43 @@
   "repository": "https://github.com/schmalzs/onehub-api.git",
   "author": "Scott Schmalz",
   "license": "UNLICENSED",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "build:docs": "redoc-cli bundle ./spec.yaml -o ./docs/index.html",
+    "dev": "dotenv nodemon",
+    "lint": "eslint .",
+    "start": "node dist/index.js",
+    "test": "jest"
+  },
   "dependencies": {
-    "express": "^4.17.3"
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.17.3",
+    "express-openapi-validator": "^4.13.5",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "mongoose": "^6.2.6"
   },
   "devDependencies": {
-    "typescript": "^4.6.3"
+    "@types/bcrypt": "^5.0.0",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/lodash": "^4.14.179",
+    "@types/node": "^17.0.21",
+    "@typescript-eslint/eslint-plugin": "^5.14.0",
+    "@typescript-eslint/parser": "^5.14.0",
+    "dotenv-cli": "^5.0.0",
+    "eslint": "^8.10.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1",
+    "redoc-cli": "^0.13.8",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.2"
   }
 }

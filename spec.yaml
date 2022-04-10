@@ -1,0 +1,525 @@
+openapi: 3.0.0
+info:
+  title: OneHub API
+  version: '1.0'
+  contact:
+    name: Scott Schmalz
+    url: 'https://www.example.com'
+    email: scott.schmalz@gmail.com
+  description: OneHub API
+servers:
+  - url: 'http://localhost:3001/api'
+paths:
+  /docs:
+    get:
+      summary: Docs
+      tags: []
+      responses:
+        '200':
+          description: OK
+          headers: {}
+      operationId: docs
+      description: View API docs.
+  /auth/sign-up:
+    parameters: []
+    post:
+      summary: Sign Up
+      operationId: sign-up
+      description: Create an account.
+      parameters: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  role:
+                    $ref: '#/components/schemas/role'
+                  userId:
+                    type: string
+                required:
+                  - role
+                  - userId
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Bad Request
+                  error:
+                    type: string
+                required:
+                  - message
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Internal Server Error
+                  error:
+                    type: string
+                required:
+                  - message
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+  /auth/sign-in:
+    parameters: []
+    post:
+      summary: Sign In
+      operationId: sign-in
+      description: Authenticate with an account.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  role:
+                    $ref: '#/components/schemas/role'
+                  userId:
+                    type: string
+                required:
+                  - role
+                  - userId
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Bad Request
+                  error:
+                    type: string
+                required:
+                  - message
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Unauthorized
+                  error:
+                    type: string
+                required:
+                  - message
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Internal Server Error
+                  error:
+                    type: string
+                required:
+                  - message
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+  /users:
+    get:
+      summary: Get All Users
+      tags: []
+      description: Get all users.
+      operationId: get-users
+      parameters:
+        - schema:
+            type: string
+          in: cookie
+          name: token
+          description: JWT token
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/user'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Unauthorized
+                  error:
+                    type: string
+                required:
+                  - message
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Internal Server Error
+                  error:
+                    type: string
+                required:
+                  - message
+    post:
+      summary: Create User
+      tags: []
+      operationId: create-user
+      description: Create a user.
+      parameters:
+        - schema:
+            type: string
+          in: cookie
+          name: token
+          description: JWT token
+          required: true
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Bad Request
+                  error:
+                    type: string
+                required:
+                  - message
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Unauthorized
+                  error:
+                    type: string
+                required:
+                  - message
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Internal Server Error
+                  error:
+                    type: string
+                required:
+                  - message
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+  '/users/{userId}':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+    get:
+      summary: Get User
+      tags: []
+      operationId: get-user
+      description: Get a user.
+      parameters:
+        - schema:
+            type: string
+          in: cookie
+          name: token
+          description: JWT token
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Unauthorized
+                  error:
+                    type: string
+                required:
+                  - message
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Not Found
+                  error:
+                    type: string
+                required:
+                  - message
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Internal Server Error
+                  error:
+                    type: string
+                required:
+                  - message
+    put:
+      summary: Update User
+      operationId: update-user
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Bad Request
+                  error:
+                    type: string
+                required:
+                  - message
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Unauthorized
+                  error:
+                    type: string
+                required:
+                  - message
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Not Found
+                  error:
+                    type: string
+                required:
+                  - message
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Internal Server Error
+                  error:
+                    type: string
+                required:
+                  - message
+      parameters:
+        - schema:
+            type: string
+          in: cookie
+          name: token
+          description: JWT token
+          required: true
+      description: Update user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+    delete:
+      summary: Delete User
+      operationId: delete-user
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Unauthorized
+                  error:
+                    type: string
+                required:
+                  - message
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Not Found
+                  error:
+                    type: string
+                required:
+                  - message
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    enum:
+                      - Internal Server Error
+                  error:
+                    type: string
+                required:
+                  - message
+      description: Delete user.
+      parameters:
+        - schema:
+            type: string
+          in: cookie
+          name: token
+          description: JWT token
+          required: true
+components:
+  schemas:
+    role:
+      type: string
+      title: Role
+      enum:
+        - ADMIN
+        - MANAGER
+        - USER
+    user:
+      title: User
+      type: object
+      properties:
+        _id:
+          type: string
+          readOnly: true
+        email:
+          type: string
+        role:
+          $ref: '#/components/schemas/role'
+        createdAt:
+          type: string
+          readOnly: true
+        updatedAt:
+          type: string
+          readOnly: true
+      required:
+        - _id
+        - email
+        - role
+        - createdAt
+        - updatedAt
+  responses: {}
