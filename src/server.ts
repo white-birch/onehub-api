@@ -11,11 +11,6 @@ if (!PORT) {
   throw new Error('Missing environment variable: PORT');
 }
 
-const api = Router();
-api.use('/docs', docs);
-api.use(affiliates);
-api.use(users);
-
 const app = express();
 app.use(httpContext.middleware);
 app.use(traceMiddleware);
@@ -23,7 +18,14 @@ app.use(requestLoggerMiddleware);
 app.use(cookieParser());
 app.use(express.json());
 // app.use(openApiMiddleware()); // TODO: Re-enable
-app.use('/api', api);
+
+const v1 = Router();
+v1.use('/docs', docs);
+v1.use(affiliates);
+v1.use(users);
+
+app.use('/api/v1', v1);
+
 app.use(notFoundMiddleware);
 app.use(errorHandlingMiddleware);
 

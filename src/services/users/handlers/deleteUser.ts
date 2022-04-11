@@ -1,5 +1,6 @@
 import { User } from '../../../db';
 import { NotFoundError } from '../../../errors';
+import logger from '../../../utils/logger';
 import * as validators from '../validators';
 
 const deleteUser = async (userId: string) => {
@@ -8,7 +9,7 @@ const deleteUser = async (userId: string) => {
   const user = await User.findById(userId);
 
   if (!user) {
-    console.warn('User not found');
+    logger.warn('User not found');
     throw new NotFoundError();
   }
 

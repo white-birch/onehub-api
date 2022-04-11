@@ -1,4 +1,5 @@
 import { BadRequestError, InternalServerError, NotFoundError, UnauthorizedError } from '../errors';
+import logger from '../utils/logger';
 
 import type { Request, Response, NextFunction } from 'express';
 
@@ -10,7 +11,7 @@ const errorHandlingMiddleware = (err: Error, req: Request, res: Response, next: 
   if (err instanceof InternalServerError) return res.status(500).json({ message: err.message });
 
   // Unexpected Error
-  console.error(`Unexpected Error [${err}]`);
+  logger.error({ message: 'Unexpected Error', error: err });
   return res.status(500).json({ message: 'Internal Server Error' });
 };
 

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { middleware, error } from 'express-openapi-validator';
 import { isEqual, uniqWith } from 'lodash';
+import logger from '../utils/logger';
 
 import type { Request, Response, NextFunction } from 'express';
 import type { ValidationErrorItem } from 'express-openapi-validator/dist/framework/types';
@@ -14,7 +15,7 @@ const openApiMiddleware = () => {
   router.use(middleware({ apiSpec: './spec.yaml', validateRequests: true, validateApiSpec: true }));
 
   router.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    console.warn('OpenAPI middleware error:', err);
+    logger.warn({ message: 'OpenAPI Middleware Error', error: err });
 
     if (err instanceof error.BadRequest) return replyWithError(res, 400, 'Bad Request', err.errors);
     if (err instanceof error.Unauthorized) return replyWithError(res, 401, 'Unauthorized', err.errors);

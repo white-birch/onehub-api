@@ -1,6 +1,7 @@
 import { omit } from 'lodash';
 import { User } from '../../../db';
 import { NotFoundError } from '../../../errors';
+import logger from '../../../utils/logger';
 import * as validators from '../validators';
 
 const getUser = async (userId: string) => {
@@ -9,7 +10,7 @@ const getUser = async (userId: string) => {
   const user = await User.findById(userId);
 
   if (!user) {
-    console.warn('User not found');
+    logger.warn('User not found');
     throw new NotFoundError();
   }
 

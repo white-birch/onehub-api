@@ -1,5 +1,6 @@
 import { Affiliate } from '../../../db';
 import { NotFoundError } from '../../../errors';
+import logger from '../../../utils/logger';
 import * as validators from '../validators';
 
 import type { Affiliate as AffiliateType } from 'types';
@@ -10,7 +11,7 @@ const updateAffiliate = async (affiliate: AffiliateType) => {
   const affiliateDocument = await Affiliate.findById(affiliate._id);
 
   if (!affiliateDocument) {
-    console.warn('Affiliate not found');
+    logger.warn('Affiliate not found');
     throw new NotFoundError();
   }
 

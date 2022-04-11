@@ -1,9 +1,11 @@
 import { NotFoundError } from '../errors';
+import logger from '../utils/logger';
 
 import type { Request } from 'express';
 
 const notFoundMiddleware = (req: Request) => {
-  console.warn(`Received unsupported request: ${req.method} ${req.url}`);
+  const { method, path, url } = req;
+  logger.warn({ message: 'Received unsupported request', method, path, url });
   throw new NotFoundError();
 };
 

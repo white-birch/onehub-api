@@ -1,5 +1,6 @@
 import { Affiliate } from '../../../db';
 import { NotFoundError } from '../../../errors';
+import logger from '../../../utils/logger';
 import * as validators from '../validators';
 
 const deleteAffiliate = async (affiliateId: string) => {
@@ -8,7 +9,7 @@ const deleteAffiliate = async (affiliateId: string) => {
   const affiliate = await Affiliate.findById(affiliateId);
 
   if (!affiliate) {
-    console.warn('Affiliate not found');
+    logger.warn('Affiliate not found');
     throw new NotFoundError();
   }
 

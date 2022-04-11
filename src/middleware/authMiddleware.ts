@@ -3,6 +3,7 @@ import { BadRequestError, UnauthorizedError } from '../errors';
 import { Role } from '../types';
 import ErrorCode from '../utils/errorCodes';
 import { verify } from '../utils/crypto';
+import logger from '../utils/logger';
 import nextOnError from './nextOnError';
 
 import type { Request, Response, NextFunction } from 'express';
@@ -12,10 +13,12 @@ type AuthAddOn = (req: Request, payload: JwtPayload) => void | Promise<void>;
 
 const authMiddleware = (addOns?: AuthAddOn[]) =>
   nextOnError(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const token = req.cookies.token as string | undefined;
+    const bearerToken = req.headers.authorization?.split(' ')[1];
+    const cookieToken = req.cookies.token as string | undefined;
+    const token = bearerToken ?? cookieToken;
 
     if (!token) {
-      console.warn('Missing token');
+      logger.warn('Missing token');
       throw new UnauthorizedError();
     }
 
@@ -24,12 +27,12 @@ const authMiddleware = (addOns?: AuthAddOn[]) =>
     try {
       payload = await verify(token);
     } catch (err) {
-      console.warn(`Invalid token [${err}]`);
+      logger.warn({ message: 'Invalid token', error: err, token });
       throw new UnauthorizedError();
     }
 
     if (!payload || typeof payload === 'string') {
-      console.warn('Invalid token payload');
+      logger.warn('Invalid token payload');
       throw new UnauthorizedError();
     }
 
@@ -49,12 +52,12 @@ export const authorizeUserOperation = async (req: Request, payload: JwtPayload) 
   const jwtUserId = payload.userId;
 
   if (!requestedUserId) {
-    console.warn('Missing userId in request');
+    logger.warn('Missing userId in request');
     throw new BadRequestError([ErrorCode.IdRequired]);
   }
 
   if (!jwtUserId) {
-    console.warn('Missing userId in token');
+    logger.warn('Missing userId in token');
     throw new BadRequestError([ErrorCode.TokenRequired]);
   }
 
@@ -66,7 +69,7 @@ export const authorizeUserOperation = async (req: Request, payload: JwtPayload) 
   const isAdmin = user?.role === Role.Admin;
 
   if (!isAdmin && requestedUserId !== jwtUserId) {
-    console.warn('User is not authorized to perform requested operation.');
+    logger.warn('User is not authorized to perform requested operation.');
     throw new UnauthorizedError();
   }
 };
@@ -75,19 +78,19 @@ export const authorizeUserManagement = async (req: Request, payload: JwtPayload)
   const userId = payload.userId;
 
   if (!userId) {
-    console.warn('Missing userId in token');
+    logger.warn('Missing userId in token');
     throw new BadRequestError([ErrorCode.TokenRequired]);
   }
 
   const user = await User.findById(userId);
 
   if (!user) {
-    console.warn('Invalid userId in token');
+    logger.warn('Invalid userId in token');
     throw new BadRequestError([ErrorCode.TokenInvalid]);
   }
 
   if (![Role.Admin, Role.Manager].includes(user.role)) {
-    console.warn('User is not authorized to perform requested operation');
+    logger.warn('User is not authorized to perform requested operation');
     throw new UnauthorizedError();
   }
 };

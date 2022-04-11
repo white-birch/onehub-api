@@ -1,6 +1,7 @@
 import { User } from '../../../db';
 import { UnauthorizedError } from '../../../errors';
 import { compare, sign } from '../../../utils/crypto';
+import logger from '../../../utils/logger';
 import * as validators from '../validators';
 
 const signIn = async (email: string, password: string) => {
@@ -9,14 +10,14 @@ const signIn = async (email: string, password: string) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    console.warn('Unknown email provided.');
+    logger.warn({ message: 'Unknown Email Provided', email });
     throw new UnauthorizedError();
   }
 
   const passwordMatches = await compare(password, user.password);
 
   if (!passwordMatches) {
-    console.warn(`Password is incorrect for user (${user.email}).`);
+    logger.warn({ message: 'Incorrect Password', email });
     throw new UnauthorizedError();
   }
 

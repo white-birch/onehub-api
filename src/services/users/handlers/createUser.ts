@@ -2,6 +2,7 @@ import { User } from '../../../db';
 import { BadRequestError } from '../../../errors';
 import { hash } from '../../../utils/crypto';
 import ErrorCode from '../../../utils/errorCodes';
+import logger from '../../../utils/logger';
 import * as validators from '../validators';
 
 import type { User as UserType } from 'types';
@@ -12,7 +13,7 @@ const createUser = async ({ email, password, role }: UserType) => {
   const usersWithEmail = await User.find({ email });
 
   if (usersWithEmail.length > 0) {
-    console.warn('Email is already in use.');
+    logger.warn('Email is already in use.');
     throw new BadRequestError([ErrorCode.EmailInUse]);
   }
 
