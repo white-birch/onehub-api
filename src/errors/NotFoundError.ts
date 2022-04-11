@@ -1,6 +1,6 @@
 class NotFoundError extends Error {
-  constructor(message: string) {
-    super(message);
+  constructor() {
+    super('Not Found');
     this.name = this.constructor.name;
     Error.captureStackTrace(this, this.constructor);
   }

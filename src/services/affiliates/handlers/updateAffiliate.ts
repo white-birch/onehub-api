@@ -1,19 +1,17 @@
 import { Affiliate } from '../../../db';
 import { NotFoundError } from '../../../errors';
-import { validateAffiliateId, validateName } from '../validators';
+import * as validators from '../validators';
 
 import type { Affiliate as AffiliateType } from 'types';
 
 const updateAffiliate = async (affiliate: AffiliateType) => {
-  validateAffiliateId(affiliate._id, 'Affiliate ID is invalid.');
-  validateName(affiliate.name, 'Affiliate name is invalid.');
+  validators.validate({ ...validators._id, ...validators.name }, affiliate);
 
   const affiliateDocument = await Affiliate.findById(affiliate._id);
 
   if (!affiliateDocument) {
-    const error = new NotFoundError('Affiliate not found');
-    console.error(error);
-    throw error;
+    console.warn('Affiliate not found');
+    throw new NotFoundError();
   }
 
   await affiliateDocument.update(affiliate);

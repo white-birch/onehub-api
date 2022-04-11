@@ -3,6 +3,12 @@ import cookieParser from 'cookie-parser';
 import { errorHandlingMiddleware, notFoundMiddleware /*, openApiMiddleware*/ } from './middleware';
 import { affiliates, docs, users } from './services';
 
+const PORT = process.env.PORT;
+
+if (!PORT) {
+  throw new Error('Missing environment variable: PORT');
+}
+
 const api = Router();
 api.use((req, res, next) => {
   console.info(req.path);
@@ -23,12 +29,6 @@ app.use(errorHandlingMiddleware);
 export const start = async () =>
   new Promise((resolve, reject) => {
     try {
-      const PORT = process.env.PORT;
-
-      if (!PORT) {
-        throw new Error('Missing environment variable: PORT');
-      }
-
       app.listen(PORT, () => {
         console.info(`Server listening on port ${PORT}`);
         resolve(null);

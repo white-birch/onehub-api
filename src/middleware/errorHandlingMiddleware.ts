@@ -4,13 +4,13 @@ import type { Request, Response, NextFunction } from 'express';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const errorHandlingMiddleware = (err: Error, req: Request, res: Response, next: NextFunction) => {
-  if (err instanceof BadRequestError) return res.status(400).json({ message: 'Bad Request', error: err.message });
-  if (err instanceof NotFoundError) return res.status(404).json({ message: 'Not Found', error: err.message });
-  if (err instanceof UnauthorizedError) return res.status(401).json({ message: 'Unauthorized', error: err.message });
-  if (err instanceof InternalServerError) return res.status(500).json({ message: 'Internal Server Error', error: err.message });
+  if (err instanceof BadRequestError) return res.status(400).json({ message: err.message, errors: err.errors });
+  if (err instanceof NotFoundError) return res.status(404).json({ message: err.message });
+  if (err instanceof UnauthorizedError) return res.status(401).json({ message: err.message });
+  if (err instanceof InternalServerError) return res.status(500).json({ message: err.message });
 
   // Unexpected Error
-  console.error(err);
+  console.error(`Unexpected Error [${err}]`);
   return res.status(500).json({ message: 'Internal Server Error' });
 };
 

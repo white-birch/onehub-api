@@ -1,10 +1,10 @@
 import { Affiliate } from '../../../db';
-import { validateName } from '../validators';
+import * as validators from '../validators';
 
 import type { Affiliate as AffiliateType } from 'types';
 
 const createAffiliate = async ({ name }: AffiliateType) => {
-  validateName(name, 'Name is invalid.');
+  validators.validate(validators.name, { name });
 
   const affiliate = new Affiliate({ name });
   await affiliate.save();

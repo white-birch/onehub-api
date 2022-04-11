@@ -1,16 +1,15 @@
 import { User } from '../../../db';
 import { NotFoundError } from '../../../errors';
-import { validateUserId } from '../validators';
+import * as validators from '../validators';
 
 const deleteUser = async (userId: string) => {
-  validateUserId(userId, 'User ID is invalid.');
+  validators.validate(validators._id, { _id: userId });
 
   const user = await User.findById(userId);
 
   if (!user) {
-    const error = new NotFoundError('User not found');
-    console.error(error);
-    throw error;
+    console.warn('User not found');
+    throw new NotFoundError();
   }
 
   await user.delete();

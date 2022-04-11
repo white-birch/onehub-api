@@ -1,6 +1,6 @@
 class InternalServerError extends Error {
-  constructor(message: string) {
-    super(message);
+  constructor() {
+    super('Internal Server Error');
     this.name = this.constructor.name;
     Error.captureStackTrace(this, this.constructor);
   }

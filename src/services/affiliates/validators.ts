@@ -1,17 +1,22 @@
+import { object, string, ValidationError } from 'yup';
+import { ObjectShape } from 'yup/lib/object';
 import { BadRequestError } from '../../errors';
+import ErrorCode from '../../utils/errorCodes';
 
-export const validateAffiliateId = (value: string | undefined, errorMessage: string) => {
-  if (typeof value !== 'string' || value.length === 0) {
-    const error = new BadRequestError(errorMessage);
-    console.error(error);
+export const validate = <Type>(schema: ObjectShape, user: Partial<Type>) => {
+  try {
+    object(schema).validateSync(user, { abortEarly: false });
+    return [];
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      console.warn('Validation error(s)', error.errors);
+      throw new BadRequestError(error.errors);
+    }
+
     throw error;
   }
 };
 
-export const validateName = (value: string | undefined, errorMessage: string) => {
-  if (typeof value !== 'string' || value.length === 0) {
-    const error = new BadRequestError(errorMessage);
-    console.error(error);
-    throw error;
-  }
-};
+export const _id = { _id: string().required(ErrorCode.IdRequired) };
+
+export const name = { name: string().required(ErrorCode.NameRequired) };

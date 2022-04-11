@@ -1,7 +1,10 @@
 class BadRequestError extends Error {
-  constructor(message: string) {
-    super(message);
+  errors: string[];
+
+  constructor(errors: string[]) {
+    super('Bad Request');
     this.name = this.constructor.name;
+    this.errors = errors;
     Error.captureStackTrace(this, this.constructor);
   }
 }
