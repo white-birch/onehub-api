@@ -1,4 +1,4 @@
-import { User } from '../db';
+import * as db from '../db/mongo';
 import { BadRequestError, UnauthorizedError } from '../errors';
 import { Role } from '../types';
 import ErrorCode from '../utils/errorCodes';
@@ -65,7 +65,7 @@ export const authorizeUserOperation = async (req: Request, payload: JwtPayload) 
     return;
   }
 
-  const user = await User.findById(jwtUserId);
+  const user = await db.users.findById(jwtUserId);
   const isAdmin = user?.role === Role.Admin;
 
   if (!isAdmin && requestedUserId !== jwtUserId) {
@@ -82,7 +82,7 @@ export const authorizeUserManagement = async (req: Request, payload: JwtPayload)
     throw new BadRequestError([ErrorCode.TokenRequired]);
   }
 
-  const user = await User.findById(userId);
+  const user = await db.users.findById(userId);
 
   if (!user) {
     logger.warn('Invalid userId in token');

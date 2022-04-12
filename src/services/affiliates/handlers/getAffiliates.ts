@@ -1,8 +1,5 @@
-import { Affiliate } from '../../../db';
+import * as db from '../../../db/mongo';
 
-const getAffiliates = async () => {
-  const affiliates = await Affiliate.find({}).exec();
-  return affiliates.map((affiliate) => affiliate.toObject({ versionKey: false }));
-};
+const getAffiliates = async () => db.affiliates.find({});
 
 export default getAffiliates;

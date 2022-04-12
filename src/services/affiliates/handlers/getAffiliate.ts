@@ -1,4 +1,4 @@
-import { Affiliate } from '../../../db';
+import * as db from '../../../db/mongo';
 import { NotFoundError } from '../../../errors';
 import logger from '../../../utils/logger';
 import * as validators from '../validators';
@@ -6,14 +6,14 @@ import * as validators from '../validators';
 const getAffiliate = async (affiliateId: string) => {
   validators.validate(validators._id, { _id: affiliateId });
 
-  const affiliate = await Affiliate.findById(affiliateId);
+  const affiliate = await db.affiliates.findById(affiliateId);
 
   if (!affiliate) {
     logger.warn('Affiliate not found');
     throw new NotFoundError();
   }
 
-  return affiliate.toObject({ versionKey: false });
+  return affiliate;
 };
 
 export default getAffiliate;

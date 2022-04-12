@@ -1,9 +1,9 @@
 import { omit } from 'lodash';
-import { User } from '../../../db';
+import * as db from '../../../db/mongo';
 
 const getUsers = async () => {
-  const users = await User.find({}).exec();
-  return users.map((user) => omit(user.toObject({ versionKey: false }), 'password'));
+  const users = await db.users.find({});
+  return users.map((user) => omit(user, 'password'));
 };
 
 export default getUsers;

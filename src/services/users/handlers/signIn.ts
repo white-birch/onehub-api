@@ -1,4 +1,4 @@
-import { User } from '../../../db';
+import * as db from '../../../db/mongo';
 import { UnauthorizedError } from '../../../errors';
 import { compare, sign } from '../../../utils/crypto';
 import logger from '../../../utils/logger';
@@ -7,7 +7,7 @@ import * as validators from '../validators';
 const signIn = async (email: string, password: string) => {
   validators.validate({ ...validators.email, ...validators.password }, { email, password });
 
-  const user = await User.findOne({ email });
+  const [user] = await db.users.find({ email });
 
   if (!user) {
     logger.warn({ message: 'Unknown Email Provided', email });

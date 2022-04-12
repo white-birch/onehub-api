@@ -1,7 +1,8 @@
-import * as database from './db';
+import * as mongo from './db/mongo';
+import * as postgres from './db/postgres';
 import * as server from './server';
 
 (async () => {
-  await database.connect();
+  await Promise.all([mongo.connect(), postgres.connect()]);
   await server.start();
 })();
