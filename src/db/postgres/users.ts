@@ -21,7 +21,7 @@ const User = sequelize.define<Model<User>>(
       allowNull: false,
     },
     role: {
-      type: DataTypes.ENUM('USER', 'MANAGER', 'ADMIN'),
+      type: DataTypes.STRING,
     },
   },
   { paranoid: true }
