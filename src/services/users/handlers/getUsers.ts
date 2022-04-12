@@ -1,5 +1,5 @@
 import { omit } from 'lodash';
-import * as db from '../../../db/mongo';
+import * as db from '../../../db/postgres';
 
 const getUsers = async () => {
   const users = await db.users.find({});

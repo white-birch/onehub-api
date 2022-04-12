@@ -1,4 +1,4 @@
-import * as db from '../../../db/mongo';
+import * as db from '../../../db/postgres';
 import { NotFoundError } from '../../../errors';
 import logger from '../../../utils/logger';
 import * as validators from '../validators';

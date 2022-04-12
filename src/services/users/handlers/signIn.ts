@@ -1,4 +1,4 @@
-import * as db from '../../../db/mongo';
+import * as db from '../../../db/postgres';
 import { UnauthorizedError } from '../../../errors';
 import { compare, sign } from '../../../utils/crypto';
 import logger from '../../../utils/logger';

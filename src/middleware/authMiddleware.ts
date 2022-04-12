@@ -1,4 +1,4 @@
-import * as db from '../db/mongo';
+import * as db from '../db/postgres';
 import { BadRequestError, UnauthorizedError } from '../errors';
 import { Role } from '../types';
 import ErrorCode from '../utils/errorCodes';

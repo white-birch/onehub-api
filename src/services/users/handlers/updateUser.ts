@@ -1,4 +1,4 @@
-import * as db from '../../../db/mongo';
+import * as db from '../../../db/postgres';
 import { BadRequestError, NotFoundError } from '../../../errors';
 import { hash } from '../../../utils/crypto';
 import ErrorCode from '../../../utils/errorCodes';

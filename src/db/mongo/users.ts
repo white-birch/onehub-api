@@ -16,7 +16,7 @@ const User = mongoose.model<User>('User', schema);
 export const create = async (user: User): Promise<User> => User.create(user);
 
 export const deleteById = async (_id: string): Promise<void> => {
-  User.findByIdAndDelete(_id).exec();
+  await User.findByIdAndDelete(_id).exec();
 };
 
 export const find = async (user: Partial<User>): Promise<User[]> => {

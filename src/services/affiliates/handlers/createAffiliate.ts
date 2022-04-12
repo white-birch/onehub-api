@@ -1,4 +1,4 @@
-import * as db from '../../../db/mongo';
+import * as db from '../../../db/postgres';
 import * as validators from '../validators';
 
 import type { Affiliate as AffiliateType } from 'types';

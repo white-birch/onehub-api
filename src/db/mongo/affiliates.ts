@@ -14,7 +14,7 @@ const Affiliate = mongoose.model<Affiliate>('Affiliate', schema);
 export const create = async (affiliate: Affiliate): Promise<Affiliate> => Affiliate.create(affiliate);
 
 export const deleteById = async (_id: string): Promise<void> => {
-  Affiliate.findByIdAndDelete(_id).exec();
+  await Affiliate.findByIdAndDelete(_id).exec();
 };
 
 export const find = async (affiliate: Partial<Affiliate>): Promise<Affiliate[]> => {

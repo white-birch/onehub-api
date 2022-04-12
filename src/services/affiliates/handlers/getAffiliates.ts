@@ -1,4 +1,4 @@
-import * as db from '../../../db/mongo';
+import * as db from '../../../db/postgres';
 
 const getAffiliates = async () => db.affiliates.find({});
 
