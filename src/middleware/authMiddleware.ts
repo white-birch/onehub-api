@@ -9,10 +9,14 @@ import nextOnError from './nextOnError';
 import type { Request, Response, NextFunction } from 'express';
 import type { JwtPayload } from 'jsonwebtoken';
 
+const DISABLE_AUTH = process.env.DISABLE_AUTH === 'true';
+
 type AuthAddOn = (req: Request, payload: JwtPayload) => void | Promise<void>;
 
 const authMiddleware = (addOns?: AuthAddOn[]) =>
   nextOnError(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    if (DISABLE_AUTH) return next();
+
     const bearerToken = req.headers.authorization?.split(' ')[1];
     const cookieToken = req.cookies.token as string | undefined;
     const token = bearerToken ?? cookieToken;
