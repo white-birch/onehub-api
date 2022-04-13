@@ -1,20 +1,27 @@
-import { DataTypes, Model } from 'sequelize';
-import sequelize from '../sequelize';
+import { BelongsToMany, Column, CreatedAt, DataType, DeletedAt, Model, Table, UpdatedAt } from 'sequelize-typescript';
+import { AffiliateUser, User } from '.';
 
-import type { Affiliate } from '../../../types';
+import type { Affiliate as AffiliateAttributes } from '../../../types';
 
-export default sequelize.define<Model<Affiliate>>(
-  'Affiliate',
-  {
-    _id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  },
-  { paranoid: true }
-);
+@Table
+class Affiliate extends Model<AffiliateAttributes> {
+  @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
+  _id: string;
+
+  @Column({ type: DataType.STRING, allowNull: false })
+  name!: string;
+
+  @CreatedAt
+  creationDate: Date;
+
+  @UpdatedAt
+  updatedOn: Date;
+
+  @DeletedAt
+  deletionDate: Date;
+
+  @BelongsToMany(() => User, () => AffiliateUser)
+  users: User[];
+}
+
+export default Affiliate;

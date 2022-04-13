@@ -1,28 +1,33 @@
-import { DataTypes, Model } from 'sequelize';
-import sequelize from '../sequelize';
+import { BelongsToMany, Column, CreatedAt, DataType, DeletedAt, Model, Table, UpdatedAt } from 'sequelize-typescript';
+import { Affiliate, AffiliateUser } from '.';
 
-import type { User } from '../../../types';
+import type { User as UserAttributes } from '../../../types';
 
-export default sequelize.define<Model<User>>(
-  'User',
-  {
-    _id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    role: {
-      type: DataTypes.STRING,
-    },
-  },
-  { paranoid: true }
-);
+@Table
+class User extends Model<UserAttributes> {
+  @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
+  _id: string;
+
+  @Column({ type: DataType.STRING, allowNull: false, unique: true })
+  email!: string;
+
+  @Column({ type: DataType.STRING, allowNull: false })
+  password!: string;
+
+  @Column({ type: DataType.STRING })
+  role: string;
+
+  @CreatedAt
+  creationDate: Date;
+
+  @UpdatedAt
+  updatedOn: Date;
+
+  @DeletedAt
+  deletionDate: Date;
+
+  @BelongsToMany(() => Affiliate, () => AffiliateUser)
+  affiliates: Affiliate[];
+}
+
+export default User;
