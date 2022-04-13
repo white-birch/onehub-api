@@ -1,9 +1,5 @@
-import { omit } from 'lodash';
-import * as db from '../../../db/postgres';
+import { User } from '../../../db';
 
-const getUsers = async () => {
-  const users = await db.users.find({});
-  return users.map((user) => omit(user, 'password'));
-};
+const getUsers = async () => User.findAll();
 
 export default getUsers;

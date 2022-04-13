@@ -1,14 +1,12 @@
-import * as db from '../../../db/postgres';
 import * as validators from '../validators';
+import { Affiliate } from '../../../db';
 
-import type { Affiliate as AffiliateType } from 'types';
+import type { AffiliateAttributes } from 'types';
 
-const createAffiliate = async ({ name }: AffiliateType) => {
-  validators.validate(validators.name, { name });
-
-  const affiliate = await db.affiliates.create({ name });
-
-  return affiliate._id?.toString();
+const createAffiliate = async (data: AffiliateAttributes) => {
+  validators.validate(validators.name, data);
+  const affiliate = new Affiliate(data);
+  return affiliate.save();
 };
 
 export default createAffiliate;

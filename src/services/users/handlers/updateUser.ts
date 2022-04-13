@@ -1,40 +1,42 @@
-import * as db from '../../../db/postgres';
+import { User } from '../../../db';
 import { BadRequestError, NotFoundError } from '../../../errors';
 import { hash } from '../../../utils/crypto';
 import ErrorCode from '../../../utils/errorCodes';
 import logger from '../../../utils/logger';
 import * as validators from '../validators';
+import getUser from './getUser';
 
-import type { User as UserType } from 'types';
+import type { UserAttributes } from 'types';
 
-const updateUser = async (user: UserType) => {
+const updateUser = async (data: UserAttributes) => {
   validators.validate(
     {
       ...validators._id,
       ...validators.email,
-      ...(user.password && validators.password),
+      ...(data.password && validators.password),
       ...validators.role,
     },
-    user
+    data
   );
 
-  const usersWithEmail = await db.users.find({ email: user.email });
+  const usersWithEmail = await User.findAll({ where: { email: data.email } });
 
-  if (usersWithEmail.some((u) => u._id?.toString() !== user._id?.toString())) {
-    logger.warn({ message: 'User Already Exists', email: user.email });
+  if (usersWithEmail.some((u) => u._id?.toString() !== data._id?.toString())) {
+    logger.warn({ message: 'User Already Exists With Email', email: data.email });
     throw new BadRequestError([ErrorCode.EmailInUse]);
   }
 
-  const userDocument = await db.users.findById(user._id);
+  const user = await getUser(data._id as string);
 
-  if (!userDocument) {
+  if (!user) {
     logger.warn('User not found');
     throw new NotFoundError();
   }
 
-  user.password = user.password ? await hash(user.password) : userDocument.password;
-
-  await db.users.update(user);
+  user.update({
+    ...data,
+    password: data.password ? await hash(data.password) : user.password,
+  });
 };
 
 export default updateUser;

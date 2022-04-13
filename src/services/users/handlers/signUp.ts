@@ -6,7 +6,7 @@ const signUp = async (email: string, password: string) => {
   const role = Role.User;
   const userId = await createUser({ email, password, role });
   const token = await sign({ userId });
-  return { role, token, userId };
+  return { token, userId };
 };
 
 export default signUp;

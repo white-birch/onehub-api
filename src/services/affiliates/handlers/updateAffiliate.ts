@@ -1,21 +1,14 @@
-import * as db from '../../../db/postgres';
-import { NotFoundError } from '../../../errors';
-import logger from '../../../utils/logger';
 import * as validators from '../validators';
 
-import type { Affiliate as AffiliateType } from 'types';
+import type { AffiliateAttributes } from 'types';
+import getAffiliate from './getAffiliate';
 
-const updateAffiliate = async (affiliate: AffiliateType) => {
-  validators.validate({ ...validators._id, ...validators.name }, affiliate);
+const updateAffiliate = async (data: AffiliateAttributes) => {
+  validators.validate({ ...validators._id, ...validators.name }, data);
 
-  const affiliateDocument = await db.affiliates.findById(affiliate._id);
+  const affiliate = await getAffiliate(data._id as string);
 
-  if (!affiliateDocument) {
-    logger.warn('Affiliate not found');
-    throw new NotFoundError();
-  }
-
-  await db.affiliates.update(affiliate);
+  return affiliate.update(data);
 };
 
 export default updateAffiliate;

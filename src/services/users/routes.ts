@@ -1,8 +1,6 @@
 import { Router } from 'express';
 import { authMiddleware, authAddOns, nextOnError } from '../../middleware';
-import { signIn, signUp, createUser, deleteUser, getUser, getUsers, updateUser } from './handlers';
-
-import type { User } from 'types';
+import { signIn, signUp, createUser, deleteUser, getUser, getUsers, updateUser, addUserToAffiliate } from './handlers';
 
 const { authorizeUserManagement } = authAddOns;
 
@@ -12,8 +10,8 @@ router.post(
   '/auth/sign-in',
   nextOnError(async (req, res) => {
     const { email, password } = req.body;
-    const { role, token, userId } = await signIn(email, password);
-    res.status(200).cookie('token', token).json({ role, userId });
+    const { token, userId } = await signIn(email, password);
+    res.status(200).cookie('token', token).json({ userId });
   })
 );
 
@@ -21,15 +19,15 @@ router.post(
   '/auth/sign-up',
   nextOnError(async (req, res) => {
     const { email, password } = req.body;
-    const { role, token, userId } = await signUp(email, password);
-    res.status(200).cookie('token', token).json({ role, userId });
+    const { token, userId } = await signUp(email, password);
+    res.status(200).cookie('token', token).json({ userId });
   })
 );
 
 router.get(
   '/users',
   authMiddleware([authorizeUserManagement]),
-  nextOnError(async (req, res) => {
+  nextOnError(async (_req, res) => {
     const users = await getUsers();
     res.status(200).json(users);
   })
@@ -48,14 +46,8 @@ router.post(
   '/users/',
   authMiddleware([authorizeUserManagement]),
   nextOnError(async (req, res) => {
-    const user: User = {
-      email: req.body.email,
-      password: req.body.password,
-      role: req.body.role,
-    };
-
-    await createUser(user);
-    res.sendStatus(201);
+    const user = await createUser(req.body);
+    res.status(201).json(user);
   })
 );
 
@@ -63,14 +55,8 @@ router.put(
   '/users/:userId',
   authMiddleware([authorizeUserManagement]),
   nextOnError(async (req, res) => {
-    const user: User = {
-      email: req.body.email,
-      password: req.body.password,
-      role: req.body.role,
-    };
-
-    await updateUser({ ...user, _id: req.params.userId });
-    res.sendStatus(200);
+    const user = await updateUser({ ...req.body, _id: req.params.userId });
+    res.status(200).json(user);
   })
 );
 
@@ -79,6 +65,16 @@ router.delete(
   authMiddleware([authorizeUserManagement]),
   nextOnError(async (req, res) => {
     await deleteUser(req.params.userId);
+    res.sendStatus(200);
+  })
+);
+
+router.put(
+  '/users/:userId/affiliate/:affiliateId',
+  authMiddleware([authorizeUserManagement]),
+  nextOnError(async (req, res) => {
+    const { userId, affiliateId } = req.params;
+    await addUserToAffiliate(userId, affiliateId);
     res.sendStatus(200);
   })
 );

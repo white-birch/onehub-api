@@ -1,19 +1,12 @@
-import * as db from '../../../db/postgres';
-import { NotFoundError } from '../../../errors';
-import logger from '../../../utils/logger';
 import * as validators from '../validators';
+import getUser from './getUser';
 
 const deleteUser = async (userId: string) => {
   validators.validate(validators._id, { _id: userId });
 
-  const user = await db.users.findById(userId);
+  const user = await getUser(userId);
 
-  if (!user) {
-    logger.warn('User not found');
-    throw new NotFoundError();
-  }
-
-  await db.users.deleteById(userId);
+  await user.destroy();
 };
 
 export default deleteUser;

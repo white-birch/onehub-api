@@ -1,5 +1,5 @@
-import * as db from '../../../db/postgres';
+import { Affiliate } from '../../../db';
 
-const getAffiliates = async () => db.affiliates.find({});
+const getAffiliates = async () => Affiliate.findAll();
 
 export default getAffiliates;

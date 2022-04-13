@@ -1,4 +1,4 @@
-export interface Affiliate {
+export interface AffiliateAttributes {
   _id?: string;
   name: string;
 }
@@ -17,7 +17,7 @@ export interface Timezone {
   offset: string;
 }
 
-export interface User {
+export interface UserAttributes {
   _id?: string;
   email: string;
   password: string;

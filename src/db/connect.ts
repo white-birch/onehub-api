@@ -1,4 +1,4 @@
-import logger from '../../utils/logger';
+import logger from '../utils/logger';
 import sequelize from './sequelize';
 
 const connect = async () => {

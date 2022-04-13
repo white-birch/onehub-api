@@ -1,5 +1,5 @@
-import * as db from '../db/postgres';
 import { BadRequestError, UnauthorizedError } from '../errors';
+import { getUser } from '../services/users/handlers';
 import { Role } from '../types';
 import ErrorCode from '../utils/errorCodes';
 import { verify } from '../utils/crypto';
@@ -69,7 +69,7 @@ export const authorizeUserOperation = async (req: Request, payload: JwtPayload) 
     return;
   }
 
-  const user = await db.users.findById(jwtUserId);
+  const user = await getUser(jwtUserId);
   const isAdmin = user?.role === Role.Admin;
 
   if (!isAdmin && requestedUserId !== jwtUserId) {
@@ -86,14 +86,14 @@ export const authorizeUserManagement = async (req: Request, payload: JwtPayload)
     throw new BadRequestError([ErrorCode.TokenRequired]);
   }
 
-  const user = await db.users.findById(userId);
+  const user = await getUser(userId);
 
   if (!user) {
     logger.warn('Invalid userId in token');
     throw new BadRequestError([ErrorCode.TokenInvalid]);
   }
 
-  if (![Role.Admin, Role.Manager].includes(user.role)) {
+  if (![Role.Admin, Role.Manager].includes(user.role as Role)) {
     logger.warn('User is not authorized to perform requested operation');
     throw new UnauthorizedError();
   }

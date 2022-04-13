@@ -1,7 +1,7 @@
-import * as postgres from './db/postgres';
+import * as db from './db';
 import * as server from './server';
 
 (async () => {
-  await postgres.connect();
+  await db.connect();
   await server.start();
 })();

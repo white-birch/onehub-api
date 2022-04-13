@@ -11,7 +11,7 @@ const errorHandlingMiddleware = (err: Error, req: Request, res: Response, next: 
   if (err instanceof InternalServerError) return res.status(500).json({ message: err.message });
 
   // Unexpected Error
-  logger.error({ message: 'Unexpected Error', error: err });
+  logger.error({ message: 'Unexpected Error', error: { error: err, message: err.message, stack: err.stack } });
   return res.status(500).json({ message: 'Internal Server Error' });
 };
 

@@ -1,12 +1,12 @@
 import { BelongsToMany, Column, CreatedAt, DataType, DeletedAt, Model, Table, UpdatedAt } from 'sequelize-typescript';
 import { AffiliateUser, User } from '.';
 
-import type { Affiliate as AffiliateAttributes } from '../../../types';
+import type { AffiliateAttributes } from '../../types';
 
 @Table
 class Affiliate extends Model<AffiliateAttributes> {
   @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
-  _id: string;
+  _id!: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
   name!: string;

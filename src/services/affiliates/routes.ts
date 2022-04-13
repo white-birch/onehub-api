@@ -2,8 +2,6 @@ import { Router } from 'express';
 import { authMiddleware, authAddOns, nextOnError } from '../../middleware';
 import { createAffiliate, deleteAffiliate, getAffiliate, getAffiliates, updateAffiliate } from './handlers';
 
-import type { Affiliate } from 'types';
-
 const { authorizeUserManagement } = authAddOns;
 
 const router = Router();
@@ -11,7 +9,7 @@ const router = Router();
 router.get(
   '/affiliates',
   authMiddleware([authorizeUserManagement]),
-  nextOnError(async (req, res) => {
+  nextOnError(async (_req, res) => {
     const affiliates = await getAffiliates();
     res.status(200).json(affiliates);
   })
@@ -30,9 +28,8 @@ router.post(
   '/affiliates/',
   authMiddleware([authorizeUserManagement]),
   nextOnError(async (req, res) => {
-    const affiliate: Affiliate = { name: req.body.name };
-    await createAffiliate(affiliate);
-    res.sendStatus(201);
+    const affiliate = await createAffiliate(req.body);
+    res.status(201).json(affiliate);
   })
 );
 
@@ -40,9 +37,8 @@ router.put(
   '/affiliates/:affiliateId',
   authMiddleware([authorizeUserManagement]),
   nextOnError(async (req, res) => {
-    const user: Affiliate = { name: req.body.name };
-    await updateAffiliate({ ...user, _id: req.params.affiliateId });
-    res.sendStatus(200);
+    const affiliate = await updateAffiliate({ ...req.body.name, _id: req.params.affiliateId });
+    res.status(200).json(affiliate);
   })
 );
 
