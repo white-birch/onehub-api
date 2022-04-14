@@ -17,8 +17,7 @@ const createUser = async (data: UserAttributes) => {
     throw new BadRequestError([ErrorCode.EmailInUse]);
   }
 
-  const hashedPassword = await hash(data.password);
-  const user = new User({ ...data, password: hashedPassword });
+  const user = new User({ ...data, password: await hash(data.password) });
   await user.save();
   return user;
 };
