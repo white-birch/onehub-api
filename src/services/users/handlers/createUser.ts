@@ -5,7 +5,7 @@ import ErrorCode from '../../../utils/errorCodes';
 import logger from '../../../utils/logger';
 import * as validators from '../validators';
 
-import type { UserAttributes } from 'types';
+import type { UserAttributes } from 'db';
 
 const createUser = async (data: UserAttributes) => {
   validators.validate({ ...validators.email, ...validators.password, ...validators.roles }, data);

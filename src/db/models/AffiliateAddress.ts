@@ -1,10 +1,10 @@
 import { BelongsTo, Column, CreatedAt, DataType, DeletedAt, ForeignKey, Model, Table, UpdatedAt } from 'sequelize-typescript';
 import { Affiliate } from '.';
 
-import type { Address } from '../../types';
+import type { AffiliateAddressAttributes } from './AffiliateAddress.types';
 
 @Table
-class AffiliateAddress extends Model<Address> {
+class AffiliateAddress extends Model<AffiliateAddressAttributes> {
   @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
   _id!: string;
 

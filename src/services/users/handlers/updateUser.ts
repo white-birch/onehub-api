@@ -6,7 +6,7 @@ import logger from '../../../utils/logger';
 import * as validators from '../validators';
 import getUser from './getUser';
 
-import type { UserAttributes } from 'types';
+import type { UserAttributes } from '../../../db';
 
 const updateUser = async (data: UserAttributes) => {
   validators.validate(

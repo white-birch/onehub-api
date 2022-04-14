@@ -1,7 +1,7 @@
 import { BelongsToMany, Column, CreatedAt, DataType, DeletedAt, Model, Table, UpdatedAt } from 'sequelize-typescript';
 import { Affiliate, AffiliateUser } from '.';
 
-import type { UserAttributes } from '../../types';
+import type { UserAttributes } from './User.types';
 
 @Table
 class User extends Model<UserAttributes> {

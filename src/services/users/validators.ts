@@ -1,4 +1,4 @@
-import { array, mixed, string } from 'yup';
+import { array, string } from 'yup';
 import { Role } from '../../types';
 import ErrorCode from '../../utils/errorCodes';
 

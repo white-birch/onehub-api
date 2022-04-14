@@ -1,7 +1,7 @@
 import * as validators from '../validators';
 import { Affiliate, AffiliateAddress } from '../../../db';
 
-import type { AffiliateAttributes } from 'types';
+import type { AffiliateAttributes } from '../../../db';
 
 const createAffiliate = async (data: AffiliateAttributes) => {
   validators.validate(validators.name, data);
