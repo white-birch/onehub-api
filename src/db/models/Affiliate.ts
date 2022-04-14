@@ -1,5 +1,5 @@
-import { BelongsToMany, Column, CreatedAt, DataType, DeletedAt, Model, Table, UpdatedAt } from 'sequelize-typescript';
-import { AffiliateUser, User } from '.';
+import { Column, CreatedAt, DataType, DeletedAt, HasOne, Model, Table, UpdatedAt } from 'sequelize-typescript';
+import { AffiliateAddress } from '.';
 
 import type { AffiliateAttributes } from '../../types';
 
@@ -11,6 +11,9 @@ class Affiliate extends Model<AffiliateAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
   name!: string;
 
+  @Column(DataType.STRING)
+  website: string;
+
   @CreatedAt
   creationDate: Date;
 
@@ -20,8 +23,8 @@ class Affiliate extends Model<AffiliateAttributes> {
   @DeletedAt
   deletionDate: Date;
 
-  @BelongsToMany(() => User, () => AffiliateUser)
-  users: User[];
+  @HasOne(() => AffiliateAddress)
+  address: AffiliateAddress;
 }
 
 export default Affiliate;

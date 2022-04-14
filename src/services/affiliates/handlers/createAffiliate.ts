@@ -1,11 +1,11 @@
 import * as validators from '../validators';
-import { Affiliate } from '../../../db';
+import { Affiliate, AffiliateAddress } from '../../../db';
 
 import type { AffiliateAttributes } from 'types';
 
 const createAffiliate = async (data: AffiliateAttributes) => {
   validators.validate(validators.name, data);
-  const affiliate = new Affiliate(data);
+  const affiliate = new Affiliate(data, { include: [AffiliateAddress] });
   return affiliate.save();
 };
 
