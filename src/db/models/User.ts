@@ -1,9 +1,8 @@
-import { BelongsToMany, Column, CreatedAt, DataType, DefaultScope, DeletedAt, Model, Table, UpdatedAt } from 'sequelize-typescript';
+import { BelongsToMany, Column, CreatedAt, DataType, DeletedAt, Model, Table, UpdatedAt } from 'sequelize-typescript';
 import { Affiliate, AffiliateUser } from '.';
 
 import type { UserAttributes } from '../../types';
 
-@DefaultScope(() => ({ attributes: { exclude: ['password'] } }))
 @Table
 class User extends Model<UserAttributes> {
   @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
@@ -35,6 +34,10 @@ class User extends Model<UserAttributes> {
 
   @BelongsToMany(() => Affiliate, () => AffiliateUser)
   affiliates: Affiliate[];
+
+  getPassword(): string {
+    return this.getDataValue('password');
+  }
 }
 
 export default User;

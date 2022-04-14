@@ -14,7 +14,7 @@ const signIn = async (email: string, password: string) => {
     throw new UnauthorizedError();
   }
 
-  const passwordMatches = await compare(password, user.password);
+  const passwordMatches = await compare(password, user.getPassword());
 
   if (!passwordMatches) {
     logger.warn({ message: 'Incorrect Password', email });

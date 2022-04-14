@@ -35,7 +35,7 @@ const updateUser = async (data: UserAttributes) => {
 
   user.update({
     ...data,
-    password: data.password ? await hash(data.password) : user.password,
+    password: data.password ? await hash(data.password) : user.getPassword(),
   });
 };
 
