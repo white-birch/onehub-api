@@ -14,7 +14,7 @@ const updateUser = async (data: UserAttributes) => {
       ...validators._id,
       ...validators.email,
       ...(data.password && validators.password),
-      ...validators.role,
+      ...validators.roles,
     },
     data
   );

@@ -1,4 +1,4 @@
-import { string } from 'yup';
+import { array, mixed, string } from 'yup';
 import { Role } from '../../types';
 import ErrorCode from '../../utils/errorCodes';
 
@@ -20,4 +20,8 @@ export const email = { email: string().email(ErrorCode.EmailInvalid).required(Er
 
 export const password = { password: string().matches(PASSWORD_REGEX, ErrorCode.PasswordInvalid).required(ErrorCode.PasswordRequired) };
 
-export const role = { role: string().oneOf(Object.values(Role), ErrorCode.RoleInvalid).required(ErrorCode.RoleRequired) };
+export const roles = {
+  roles: array()
+    .typeError(ErrorCode.RolesInvalid)
+    .test('roles', ErrorCode.RolesInvalid, (value) => Array.isArray(value) && value.every((role) => Object.values(Role).includes(role))),
+};

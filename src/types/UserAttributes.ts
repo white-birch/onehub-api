@@ -2,11 +2,11 @@ export interface UserAttributes {
   _id?: string;
   email: string;
   password: string;
-  role: Role;
+  roles: Role[];
 }
 
 export enum Role {
   Admin = 'ADMIN',
-  Manager = 'MANAGER',
-  User = 'USER',
+  Employee = 'EMPLOYEE',
+  Member = 'MEMBER',
 }

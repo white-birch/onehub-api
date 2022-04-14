@@ -20,8 +20,8 @@ class User extends Model<UserAttributes> {
     this.setDataValue('password', value);
   }
 
-  @Column({ type: DataType.STRING })
-  role: string;
+  @Column({ type: DataType.ARRAY(DataType.STRING()), allowNull: false, defaultValue: [] })
+  roles: string;
 
   @CreatedAt
   creationDate: Date;

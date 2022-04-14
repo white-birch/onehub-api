@@ -70,7 +70,7 @@ export const authorizeUserOperation = async (req: Request, payload: JwtPayload) 
   }
 
   const user = await getUser(jwtUserId);
-  const isAdmin = user?.role === Role.Admin;
+  const isAdmin = user?.roles.includes(Role.Admin);
 
   if (!isAdmin && requestedUserId !== jwtUserId) {
     logger.warn('User is not authorized to perform requested operation.');
@@ -93,7 +93,7 @@ export const authorizeUserManagement = async (req: Request, payload: JwtPayload)
     throw new BadRequestError([ErrorCode.TokenInvalid]);
   }
 
-  if (![Role.Admin, Role.Manager].includes(user.role as Role)) {
+  if (!user.roles.includes(Role.Admin)) {
     logger.warn('User is not authorized to perform requested operation');
     throw new UnauthorizedError();
   }
