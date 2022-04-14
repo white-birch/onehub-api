@@ -14,7 +14,7 @@ export { default as validate } from '../../utils/validate';
  */
 const PASSWORD_REGEX = /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/;
 
-export const _id = { _id: string().required(ErrorCode.IdRequired) };
+export const _id = { _id: string().uuid(ErrorCode.IdInvalid).required(ErrorCode.IdRequired) };
 
 export const email = { email: string().email(ErrorCode.EmailInvalid).required(ErrorCode.EmailRequired) };
 
