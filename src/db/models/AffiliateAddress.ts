@@ -1,13 +1,11 @@
-import { BelongsTo, Column, CreatedAt, DataType, DeletedAt, ForeignKey, Model, Table, UpdatedAt } from 'sequelize-typescript';
+import { BelongsTo, Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
 import { Affiliate } from '.';
+import _Model from './_Model';
 
 import type { AffiliateAddressAttributes } from './AffiliateAddress.types';
 
 @Table
-class AffiliateAddress extends Model<AffiliateAddressAttributes> {
-  @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
-  _id!: string;
-
+class AffiliateAddress extends _Model<AffiliateAddressAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
   streetAddress!: string;
 
@@ -19,15 +17,6 @@ class AffiliateAddress extends Model<AffiliateAddressAttributes> {
 
   @Column({ type: DataType.STRING, allowNull: false })
   state!: string;
-
-  @CreatedAt
-  creationDate: Date;
-
-  @UpdatedAt
-  updatedOn: Date;
-
-  @DeletedAt
-  deletionDate: Date;
 
   @ForeignKey(() => Affiliate)
   affiliateId!: string;

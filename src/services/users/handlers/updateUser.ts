@@ -11,7 +11,7 @@ import type { UserAttributes } from '../../../db';
 const updateUser = async (data: UserAttributes) => {
   validators.validate(
     {
-      ...validators._id,
+      ...validators.id,
       ...validators.email,
       ...(data.password && validators.password),
       ...validators.roles,
@@ -21,12 +21,12 @@ const updateUser = async (data: UserAttributes) => {
 
   const usersWithEmail = await User.findAll({ where: { email: data.email } });
 
-  if (usersWithEmail.some((u) => u._id?.toString() !== data._id?.toString())) {
+  if (usersWithEmail.some((u) => u.id !== data.id)) {
     logger.warn({ message: 'User Already Exists With Email', email: data.email });
     throw new BadRequestError([ErrorCode.EmailInUse]);
   }
 
-  const user = await getUser(data._id as string);
+  const user = await getUser(data.id as number);
 
   if (!user) {
     logger.warn('User not found');

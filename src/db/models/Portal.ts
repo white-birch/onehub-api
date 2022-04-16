@@ -1,30 +1,13 @@
-import { Column, CreatedAt, DataType, DeletedAt, HasOne, Model, Table, UpdatedAt } from 'sequelize-typescript';
-import { AffiliateAddress } from '.';
+import { HasMany, Table } from 'sequelize-typescript';
+import { Affiliate } from '.';
+import _Model from './_Model';
 
-import type { AffiliateAttributes } from '../../types';
+import type { PortalAttributes } from './Portal.types';
 
 @Table
-class Portal extends Model<AffiliateAttributes> {
-  @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
-  _id!: string;
-
-  @Column({ type: DataType.STRING, allowNull: false })
-  name!: string;
-
-  @Column(DataType.STRING)
-  website: string;
-
-  @CreatedAt
-  creationDate: Date;
-
-  @UpdatedAt
-  updatedOn: Date;
-
-  @DeletedAt
-  deletionDate: Date;
-
-  @HasOne(() => AffiliateAddress)
-  address: AffiliateAddress;
+class Portal extends _Model<PortalAttributes> {
+  @HasMany(() => Affiliate)
+  affiliates: Affiliate[];
 }
 
 export default Portal;

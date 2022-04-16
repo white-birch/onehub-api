@@ -6,11 +6,11 @@ const addUserToAffiliate = async (userId: string, affiliateId: string) => {
   const [user, affiliate] = await Promise.all([User.findByPk(userId), Affiliate.findByPk(affiliateId)]);
 
   if (!user) {
-    logger.warn('User not found');
+    logger.warn({ message: 'User not found', userId });
     throw new NotFoundError();
   }
   if (!affiliate) {
-    logger.warn('Affiliate not found');
+    logger.warn({ message: 'Affiliate not found', affiliateId });
     throw new NotFoundError();
   }
 

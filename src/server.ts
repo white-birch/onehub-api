@@ -2,7 +2,7 @@ import cookieParser from 'cookie-parser';
 import express, { Router } from 'express';
 import httpContext from 'express-http-context';
 import { errorHandlingMiddleware, notFoundMiddleware /*, openApiMiddleware*/, requestLoggerMiddleware, traceMiddleware } from './middleware';
-import { affiliates, docs, users } from './services';
+import * as services from './services';
 import logger from './utils/logger';
 
 const PORT = process.env.PORT;
@@ -20,10 +20,7 @@ app.use(express.json());
 // app.use(openApiMiddleware()); // TODO: Re-enable
 
 const v1 = Router();
-v1.use('/docs', docs);
-v1.use(affiliates);
-v1.use(users);
-
+v1.use(Object.values(services));
 app.use('/api/v1', v1);
 
 app.use(notFoundMiddleware);

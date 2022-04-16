@@ -21,7 +21,7 @@ const signIn = async (email: string, password: string) => {
     throw new UnauthorizedError();
   }
 
-  const token = await sign({ userId: user._id });
+  const token = await sign({ userId: user.id });
   return { token, user };
 };
 

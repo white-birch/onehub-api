@@ -4,9 +4,9 @@ import getAffiliate from './getAffiliate';
 import type { AffiliateAttributes } from '../../../db';
 
 const updateAffiliate = async (data: AffiliateAttributes) => {
-  validators.validate({ ...validators._id, ...validators.name }, data);
+  validators.validate({ ...validators.id, ...validators.name }, data);
 
-  const affiliate = await getAffiliate(data._id as string);
+  const affiliate = await getAffiliate(data.id as number);
 
   return affiliate.update(data);
 };

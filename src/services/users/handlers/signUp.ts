@@ -3,7 +3,7 @@ import { createUser } from '../../users/handlers';
 
 const signUp = async (email: string, password: string) => {
   const user = await createUser({ email, password, roles: [] });
-  const token = await sign({ userId: user._id });
+  const token = await sign({ userId: user.id });
   return { token, user };
 };
 

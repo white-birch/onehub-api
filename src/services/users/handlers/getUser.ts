@@ -3,8 +3,8 @@ import { NotFoundError } from '../../../errors';
 import logger from '../../../utils/logger';
 import * as validators from '../validators';
 
-const getUser = async (userId: string) => {
-  validators.validate(validators._id, { _id: userId });
+const getUser = async (userId: number) => {
+  validators.validate(validators.id, { id: userId });
 
   const user = await User.findByPk(userId);
 

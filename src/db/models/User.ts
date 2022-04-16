@@ -1,13 +1,12 @@
-import { BelongsToMany, Column, CreatedAt, DataType, DeletedAt, Model, Table, UpdatedAt } from 'sequelize-typescript';
+import { BelongsToMany, Column, DataType, Table } from 'sequelize-typescript';
 import { Affiliate, AffiliateUser } from '.';
+import _Model from './_Model';
 
+import type { Role } from 'types';
 import type { UserAttributes } from './User.types';
 
 @Table
-class User extends Model<UserAttributes> {
-  @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, primaryKey: true })
-  _id: string;
-
+class User extends _Model<UserAttributes> {
   @Column({ type: DataType.STRING, allowNull: false, unique: true })
   email!: string;
 
@@ -21,16 +20,7 @@ class User extends Model<UserAttributes> {
   }
 
   @Column({ type: DataType.ARRAY(DataType.STRING()), allowNull: false, defaultValue: [] })
-  roles: string;
-
-  @CreatedAt
-  creationDate: Date;
-
-  @UpdatedAt
-  updatedOn: Date;
-
-  @DeletedAt
-  deletionDate: Date;
+  roles: Role[];
 
   @BelongsToMany(() => Affiliate, () => AffiliateUser)
   affiliates: Affiliate[];
