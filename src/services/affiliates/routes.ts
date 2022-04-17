@@ -55,8 +55,8 @@ router.put(
   '/affiliates/:affiliateId/portal/:portalId',
   authMiddleware([authorizeUserManagement]),
   nextOnError(async (req, res) => {
-    const { userId, affiliateId } = req.params;
-    await addAffiliateToPortal(userId, affiliateId);
+    const { affiliateId, portalId } = req.params;
+    await addAffiliateToPortal(affiliateId, portalId);
     res.sendStatus(200);
   })
 );

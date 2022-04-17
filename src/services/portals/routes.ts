@@ -23,7 +23,7 @@ router.get(
 );
 
 router.post(
-  '/portals/',
+  '/portals',
   authMiddleware(),
   nextOnError(async (req, res) => {
     const portal = await createPortal(req.body);
