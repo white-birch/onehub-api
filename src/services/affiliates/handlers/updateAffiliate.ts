@@ -6,7 +6,7 @@ import type { AffiliateAttributes } from '../../../db';
 const updateAffiliate = async (data: AffiliateAttributes) => {
   validators.validate({ ...validators.id, ...validators.name }, data);
 
-  const affiliate = await getAffiliate(data.id as number);
+  const affiliate = await getAffiliate(data.id as string);
 
   return affiliate.update(data);
 };

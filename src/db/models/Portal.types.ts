@@ -1,3 +1,3 @@
 export interface PortalAttributes {
-  id?: number;
+  id?: string;
 }

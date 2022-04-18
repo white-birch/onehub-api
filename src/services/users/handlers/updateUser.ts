@@ -1,5 +1,5 @@
 import { User } from '../../../db';
-import { BadRequestError, NotFoundError } from '../../../errors';
+import { BadRequestError } from '../../../errors';
 import { hash } from '../../../utils/crypto';
 import ErrorCode from '../../../utils/errorCodes';
 import logger from '../../../utils/logger';
@@ -26,12 +26,7 @@ const updateUser = async (data: UserAttributes) => {
     throw new BadRequestError([ErrorCode.EmailInUse]);
   }
 
-  const user = await getUser(data.id as number);
-
-  if (!user) {
-    logger.warn('User not found');
-    throw new NotFoundError();
-  }
+  const user = await getUser(data.id as string);
 
   user.update({
     ...data,

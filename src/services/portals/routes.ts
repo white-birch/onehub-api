@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authMiddleware, nextOnError } from '../../middleware';
-import { createPortal, deletePortal, getPortal, getPortals, updatePortal } from './handlers';
+import { createPortal, deletePortal, getPortal, getPortalAffiliates, getPortals, updatePortal } from './handlers';
 
 const router = Router();
 
@@ -17,7 +17,7 @@ router.get(
   '/portals/:portalId',
   authMiddleware(),
   nextOnError(async (req, res) => {
-    const portal = await getPortal(Number(req.params.portalId));
+    const portal = await getPortal(req.params.portalId);
     res.status(200).json(portal);
   })
 );
@@ -44,8 +44,17 @@ router.delete(
   '/portals/:portalId',
   authMiddleware(),
   nextOnError(async (req, res) => {
-    await deletePortal(Number(req.params.portalId));
+    await deletePortal(req.params.portalId);
     res.sendStatus(200);
+  })
+);
+
+router.get(
+  '/portals/:portalId/affiliates',
+  authMiddleware(),
+  nextOnError(async (req, res) => {
+    const affiliates = await getPortalAffiliates(req.params.portalId);
+    res.status(200).json(affiliates);
   })
 );
 

@@ -1,12 +1,12 @@
 import * as validators from '../validators';
 import getPortal from './getPortal';
 
-const deletePortal = async (portalId: string) => {
+const getPortalAffiliates = async (portalId: string) => {
   validators.validate(validators.id, { id: portalId });
 
   const portal = await getPortal(portalId);
 
-  await portal.destroy();
+  return portal.$get('affiliates');
 };
 
-export default deletePortal;
+export default getPortalAffiliates;

@@ -1,7 +1,7 @@
 import { Role } from 'types';
 
 export interface UserAttributes {
-  id?: number;
+  id?: string;
   email: string;
   password: string;
   roles: Role[];

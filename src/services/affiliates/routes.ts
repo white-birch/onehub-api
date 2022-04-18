@@ -19,7 +19,7 @@ router.get(
   '/affiliates/:affiliateId',
   authMiddleware([authorizeUserManagement]),
   nextOnError(async (req, res) => {
-    const affiliate = await getAffiliate(Number(req.params.affiliateId));
+    const affiliate = await getAffiliate(req.params.affiliateId);
     res.status(200).json(affiliate);
   })
 );
@@ -46,7 +46,7 @@ router.delete(
   '/affiliates/:affiliateId',
   authMiddleware([authorizeUserManagement]),
   nextOnError(async (req, res) => {
-    await deleteAffiliate(Number(req.params.affiliateId));
+    await deleteAffiliate(req.params.affiliateId);
     res.sendStatus(200);
   })
 );

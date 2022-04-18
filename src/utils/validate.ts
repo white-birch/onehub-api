@@ -1,6 +1,7 @@
 import { object, ValidationError } from 'yup';
 import { ObjectShape } from 'yup/lib/object';
 import { BadRequestError } from '../errors';
+import logger from './logger';
 
 const validate = <Type>(schema: ObjectShape, obj: Partial<Type>) => {
   try {
@@ -8,7 +9,7 @@ const validate = <Type>(schema: ObjectShape, obj: Partial<Type>) => {
     return [];
   } catch (error) {
     if (error instanceof ValidationError) {
-      console.warn({ message: 'Validation Error(s)', error: error.errors });
+      logger.warn({ message: 'Validation Error(s)', error: error.errors });
       throw new BadRequestError(error.errors);
     }
 

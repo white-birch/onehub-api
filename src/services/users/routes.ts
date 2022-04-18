@@ -37,7 +37,7 @@ router.get(
   '/users/:userId',
   authMiddleware([authorizeUserManagement]),
   nextOnError(async (req, res) => {
-    const user = await getUser(Number(req.params.userId));
+    const user = await getUser(req.params.userId);
     res.status(200).json(user);
   })
 );
@@ -64,7 +64,7 @@ router.delete(
   '/users/:userId',
   authMiddleware([authorizeUserManagement]),
   nextOnError(async (req, res) => {
-    await deleteUser(Number(req.params.userId));
+    await deleteUser(req.params.userId);
     res.sendStatus(200);
   })
 );
