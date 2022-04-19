@@ -2,7 +2,7 @@ import { Router } from 'express';
 import httpContext from 'express-http-context';
 import { User } from '../../db';
 import { authMiddleware, nextOnError } from '../../middleware';
-import { addAffiliateToPortal, createAffiliate, deleteAffiliate, getAffiliate, getAffiliates, updateAffiliate } from './handlers';
+import { addAffiliateToPortal, createAffiliate, deleteAffiliate, getAffiliate, getAffiliates, getAffiliateUsers, updateAffiliate } from './handlers';
 import addAffiliateToUser from './handlers/addAffiliateToUser';
 
 const router = Router();
@@ -69,6 +69,15 @@ router.put(
     const { affiliateId, portalId } = req.params;
     await addAffiliateToPortal(affiliateId, portalId);
     res.sendStatus(200);
+  })
+);
+
+router.get(
+  '/affiliates/:affiliateId/users',
+  authMiddleware(),
+  nextOnError(async (req, res) => {
+    const users = await getAffiliateUsers(req.params.affiliateId);
+    res.status(200).json(users);
   })
 );
 

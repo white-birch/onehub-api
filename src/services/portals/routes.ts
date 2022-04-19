@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authAddOns, authMiddleware, nextOnError } from '../../middleware';
-import { createPortal, deletePortal, getPortal, getPortalAffiliates, getPortals, getPortalUsers, updatePortal } from './handlers';
+import { createPortal, deletePortal, getPortal, getPortalAffiliates, getPortals, updatePortal } from './handlers';
 
 const { isValidUser } = authAddOns;
 
@@ -57,15 +57,6 @@ router.get(
   nextOnError(async (req, res) => {
     const affiliates = await getPortalAffiliates(req.params.portalId);
     res.status(200).json(affiliates);
-  })
-);
-
-router.get(
-  '/portals/:portalId/users',
-  authMiddleware(),
-  nextOnError(async (req, res) => {
-    const users = await getPortalUsers(req.params.portalId);
-    res.status(200).json(users);
   })
 );
 
