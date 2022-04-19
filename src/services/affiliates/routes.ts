@@ -78,7 +78,13 @@ router.get(
   authMiddleware(),
   nextOnError(async (req, res) => {
     const users = await getAffiliateUsers(req.params.affiliateId);
-    res.status(200).json(users);
+
+    res.status(200).json(
+      users.map((user) => ({
+        ...user.toJSON(),
+        roles: user.roles.map(({ role }) => role),
+      }))
+    );
   })
 );
 
