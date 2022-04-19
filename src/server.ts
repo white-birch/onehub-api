@@ -1,7 +1,7 @@
 import cookieParser from 'cookie-parser';
 import express, { Router } from 'express';
 import httpContext from 'express-http-context';
-import { errorHandlingMiddleware, notFoundMiddleware /*, openApiMiddleware*/, requestLoggerMiddleware, traceMiddleware } from './middleware';
+import { errorHandlingMiddleware, notFoundMiddleware /*, openApiMiddleware*/, requestLoggerMiddleware, tokenMiddleware, traceMiddleware } from './middleware';
 import * as services from './services';
 import logger from './utils/logger';
 
@@ -12,11 +12,12 @@ if (!PORT) {
 }
 
 const app = express();
-app.use(httpContext.middleware);
-app.use(traceMiddleware);
-app.use(requestLoggerMiddleware);
 app.use(cookieParser());
 app.use(express.json());
+app.use(httpContext.middleware);
+app.use(traceMiddleware);
+app.use(tokenMiddleware);
+app.use(requestLoggerMiddleware);
 // app.use(openApiMiddleware()); // TODO: Re-enable
 
 const v1 = Router();

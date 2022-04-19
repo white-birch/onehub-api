@@ -1,4 +1,3 @@
-export { default as addUserToAffiliate } from './addUserToAffiliate';
 export { default as createUser } from './createUser';
 export { default as deleteUser } from './deleteUser';
 export { default as getUser } from './getUser';

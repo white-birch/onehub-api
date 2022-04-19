@@ -1,6 +1,8 @@
 import { Router } from 'express';
-import { authMiddleware, nextOnError } from '../../middleware';
+import { authAddOns, authMiddleware, nextOnError } from '../../middleware';
 import { createPortal, deletePortal, getPortal, getPortalAffiliates, getPortals, getPortalUsers, updatePortal } from './handlers';
+
+const { isValidUser } = authAddOns;
 
 const router = Router();
 
@@ -24,7 +26,7 @@ router.get(
 
 router.post(
   '/portals',
-  authMiddleware(),
+  authMiddleware([isValidUser]),
   nextOnError(async (req, res) => {
     const portal = await createPortal(req.body);
     res.status(201).json(portal);

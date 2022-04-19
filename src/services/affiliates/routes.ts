@@ -1,14 +1,15 @@
 import { Router } from 'express';
-import { authMiddleware, authAddOns, nextOnError } from '../../middleware';
+import httpContext from 'express-http-context';
+import { User } from '../../db';
+import { authMiddleware, nextOnError } from '../../middleware';
 import { addAffiliateToPortal, createAffiliate, deleteAffiliate, getAffiliate, getAffiliates, updateAffiliate } from './handlers';
-
-const { authorizeUserManagement } = authAddOns;
+import addAffiliateToUser from './handlers/addAffiliateToUser';
 
 const router = Router();
 
 router.get(
   '/affiliates',
-  authMiddleware([authorizeUserManagement]),
+  authMiddleware(),
   nextOnError(async (_req, res) => {
     const affiliates = await getAffiliates();
     res.status(200).json(affiliates);
@@ -17,7 +18,7 @@ router.get(
 
 router.get(
   '/affiliates/:affiliateId',
-  authMiddleware([authorizeUserManagement]),
+  authMiddleware(),
   nextOnError(async (req, res) => {
     const affiliate = await getAffiliate(req.params.affiliateId);
     res.status(200).json(affiliate);
@@ -25,17 +26,27 @@ router.get(
 );
 
 router.post(
-  '/affiliates/',
-  authMiddleware([authorizeUserManagement]),
+  '/affiliates',
+  authMiddleware(),
   nextOnError(async (req, res) => {
     const affiliate = await createAffiliate(req.body);
+
+    if (req.query.portalId) {
+      await addAffiliateToPortal(affiliate.id, req.query.portalId as string);
+    }
+
+    const { user } = (httpContext.get('token') as { user: User } | undefined) || {};
+    if (user) {
+      await addAffiliateToUser(affiliate, user);
+    }
+
     res.status(201).json(affiliate);
   })
 );
 
 router.put(
   '/affiliates/:affiliateId',
-  authMiddleware([authorizeUserManagement]),
+  authMiddleware(),
   nextOnError(async (req, res) => {
     const affiliate = await updateAffiliate({ ...req.body.name, id: req.params.affiliateId });
     res.status(200).json(affiliate);
@@ -44,7 +55,7 @@ router.put(
 
 router.delete(
   '/affiliates/:affiliateId',
-  authMiddleware([authorizeUserManagement]),
+  authMiddleware(),
   nextOnError(async (req, res) => {
     await deleteAffiliate(req.params.affiliateId);
     res.sendStatus(200);
@@ -53,7 +64,7 @@ router.delete(
 
 router.put(
   '/affiliates/:affiliateId/portal/:portalId',
-  authMiddleware([authorizeUserManagement]),
+  authMiddleware(),
   nextOnError(async (req, res) => {
     const { affiliateId, portalId } = req.params;
     await addAffiliateToPortal(affiliateId, portalId);

@@ -9,8 +9,6 @@ enum ErrorCode {
   PasswordRequired = 'PASSWORD_REQUIRED',
   RolesInvalid = 'ROLES_INVALID',
   RolesRequired = 'ROLES_REQUIRED',
-  TokenInvalid = 'TOKEN_INVALID',
-  TokenRequired = 'TOKEN_REQUIRED',
 }
 
 export default ErrorCode;
