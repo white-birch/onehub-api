@@ -4,7 +4,8 @@ import { v4 as uuid } from 'uuid';
 import type { NextFunction, Request, Response } from 'express';
 
 const traceMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  httpContext.set('traceId', req.headers['X-ONEHUB-TRACE-ID'] || uuid());
+  const traceId = req.headers['x-onehub-trace-id'] || uuid();
+  httpContext.set('traceId', traceId);
   next();
 };
 
