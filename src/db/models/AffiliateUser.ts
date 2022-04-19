@@ -5,12 +5,10 @@ import _Model from './_Model';
 @Table({ tableName: 'Affiliate_User' })
 class AffiliateUser extends _Model {
   @ForeignKey(() => Affiliate)
-  @Column({ type: DataType.NUMBER, allowNull: false })
-  affiliateId!: number;
+  affiliateId!: string;
 
   @ForeignKey(() => User)
-  @Column({ type: DataType.NUMBER, allowNull: false })
-  userId!: number;
+  userId!: string;
 }
 
 export default AffiliateUser;

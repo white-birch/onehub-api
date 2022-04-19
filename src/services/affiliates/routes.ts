@@ -2,6 +2,7 @@ import { Router } from 'express';
 import httpContext from 'express-http-context';
 import { User } from '../../db';
 import { authMiddleware, nextOnError } from '../../middleware';
+import { Role } from '../../types';
 import { addAffiliateToPortal, createAffiliate, deleteAffiliate, getAffiliate, getAffiliates, getAffiliateUsers, updateAffiliate } from './handlers';
 import addAffiliateToUser from './handlers/addAffiliateToUser';
 
@@ -37,7 +38,7 @@ router.post(
 
     const { user } = (httpContext.get('token') as { user: User } | undefined) || {};
     if (user) {
-      await addAffiliateToUser(affiliate, user);
+      await addAffiliateToUser(affiliate, user, Role.Admin);
     }
 
     res.status(201).json(affiliate);

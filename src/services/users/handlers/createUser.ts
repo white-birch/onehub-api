@@ -8,8 +8,7 @@ import * as validators from '../validators';
 import type { UserAttributes } from 'db';
 
 const createUser = async ({ id, ...data }: UserAttributes) => {
-  data.roles = data.roles || [];
-  validators.validate({ ...validators.email, ...validators.password, ...validators.roles }, data);
+  validators.validate({ ...validators.email, ...validators.password }, data);
 
   const usersWithEmail = await User.findAll({ where: { email: data.email } });
 
