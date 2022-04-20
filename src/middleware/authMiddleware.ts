@@ -1,30 +1,34 @@
 import httpContext from 'express-http-context';
 import { UnauthorizedError } from '../errors';
-import { getUser } from '../services/users/handlers';
 import logger from '../utils/logger';
 import nextOnError from './nextOnError';
 
 import type { Request, Response, NextFunction } from 'express';
-import type { JwtPayload } from 'jsonwebtoken';
+import type { TokenContext } from 'types';
 
 const DISABLE_AUTH = process.env.DISABLE_AUTH === 'true';
 
-type AuthAddOn = (req: Request, payload: JwtPayload) => void | Promise<void>;
+type AuthAddOn = (req: Request, tokenContext: TokenContext) => void | Promise<void>;
 
 const authMiddleware = (addOns?: AuthAddOn[]) =>
   nextOnError(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     if (DISABLE_AUTH) return next();
 
-    const token = httpContext.get('token');
+    const tokenContext = httpContext.get('token') as TokenContext | undefined;
 
-    if (!token) {
+    if (!tokenContext) {
       logger.warn('Missing or invalid token');
+      throw new UnauthorizedError();
+    }
+
+    if (!tokenContext.user) {
+      logger.warn('Unable to find user from token');
       throw new UnauthorizedError();
     }
 
     if (addOns) {
       for (const addOn of addOns) {
-        await addOn(req, token.payload);
+        await addOn(req, tokenContext);
       }
     }
 
@@ -32,22 +36,6 @@ const authMiddleware = (addOns?: AuthAddOn[]) =>
   });
 
 export default authMiddleware;
-
-export const isValidUser = async (req: Request, payload: JwtPayload) => {
-  const jwtUserId = payload.userId;
-
-  if (!jwtUserId) {
-    logger.warn('Missing userId in token');
-    throw new UnauthorizedError();
-  }
-
-  const user = await getUser(jwtUserId);
-
-  if (!user) {
-    logger.warn('Invalid userId in token');
-    throw new UnauthorizedError();
-  }
-};
 
 // export const authorizeUserOperation = async (req: Request, payload: JwtPayload) => {
 //   const requestedUserId = req.params.userId;

@@ -1,6 +1,6 @@
-import { isValidUser } from './authMiddleware';
+// import { isValidUser } from './authMiddleware';
 
-export const authAddOns = { isValidUser };
+// export const authAddOns = { isValidUser };
 
 export { default as authMiddleware } from './authMiddleware';
 export { default as errorHandlingMiddleware } from './errorHandlingMiddleware';

@@ -1,3 +1,6 @@
+import type { JwtPayload } from 'jsonwebtoken';
+import type { User } from '../db';
+
 export enum Country {
   US = 'US',
 }
@@ -60,4 +63,10 @@ export enum State {
   WI = 'WI',
   WV = 'WV',
   WY = 'WY',
+}
+
+export interface TokenContext {
+  value: string;
+  payload: JwtPayload;
+  user: User;
 }

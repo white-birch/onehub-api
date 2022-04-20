@@ -1,4 +1,5 @@
 import { BelongsToMany, Column, DataType, HasMany, Table } from 'sequelize-typescript';
+import { Role } from '../../types';
 import { Affiliate, AffiliateUser, UserRole } from '.';
 import _Model from './_Model';
 
@@ -26,6 +27,10 @@ class User extends _Model<UserAttributes> {
 
   getPassword(): string {
     return this.getDataValue('password');
+  }
+
+  isAffiliateAdmin(affiliateId: string) {
+    return this.roles.some((userRole) => userRole.affiliateId === affiliateId && userRole.role === Role.Admin);
   }
 }
 
