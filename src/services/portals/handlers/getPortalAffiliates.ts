@@ -1,4 +1,5 @@
 import httpContext from 'express-http-context';
+import { Affiliate } from '../../../db';
 import { Role } from '../../../types';
 import * as validators from '../validators';
 import { getPortal } from '.';
@@ -9,10 +10,9 @@ const getPortalAffiliates = async (portalId: string) => {
   validators.validate(validators.id, { id: portalId });
 
   const { user } = httpContext.get('token') as TokenContext;
-  const portal = await getPortal(portalId);
-  const [affiliates, userRoles] = await Promise.all([portal.$get('affiliates'), user.$get('roles')]);
+  const { affiliates } = await getPortal(portalId, { include: [Affiliate] });
 
-  return affiliates.filter((affiliate) => userRoles.some((role) => role.affiliateId === affiliate.id && role.role === Role.Admin));
+  return affiliates.filter((affiliate) => user.roles.some(({ affiliateId, role }) => affiliateId === affiliate.id && role === Role.Admin));
 };
 
 export default getPortalAffiliates;
