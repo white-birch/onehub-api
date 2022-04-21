@@ -6,7 +6,7 @@ import ErrorCode from '../../../utils/errorCodes';
 import type { AffiliateAttributes } from '../../../db';
 
 const createAffiliate = async ({ id, ...data }: AffiliateAttributes) => {
-  validators.validate({ ...validators.name, ...validators.portalId }, data);
+  validators.validate([validators.name, validators.portalId], data);
 
   try {
     const affiliate = new Affiliate(data, { include: [AffiliateAddress] });
