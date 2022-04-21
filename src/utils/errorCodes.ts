@@ -7,6 +7,8 @@ enum ErrorCode {
   NameRequired = 'NAME_REQUIRED',
   PasswordInvalid = 'PASSWORD_INVALID',
   PasswordRequired = 'PASSWORD_REQUIRED',
+  PortalIdInvalid = 'PORTAL_ID_INVALID',
+  PortalIdRequired = 'PORTAL_ID_REQUIRED',
   RolesInvalid = 'ROLES_INVALID',
   RolesRequired = 'ROLES_REQUIRED',
 }

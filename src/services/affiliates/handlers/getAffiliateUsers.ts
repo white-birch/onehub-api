@@ -1,16 +1,16 @@
-import { UserRole } from '../../../db';
+import { AffiliateUserRole, Portal, PortalUserRole, User } from '../../../db';
 import * as validators from '../validators';
 import getAffiliate from './getAffiliate';
 
 const getAffiliateUsers = async (affiliateId: string) => {
   validators.validate(validators.id, { id: affiliateId });
 
-  const affiliate = await getAffiliate(affiliateId);
-  const users = await affiliate.$get('users', { include: [UserRole] });
+  const affiliate = await getAffiliate(affiliateId, { include: [{ model: Portal }, { model: User, include: [AffiliateUserRole, PortalUserRole] }] });
 
-  return users.map((user) => ({
+  return affiliate.users.map((user) => ({
     ...user.toJSON(),
-    roles: user.roles.filter((userRole) => userRole.affiliateId === affiliateId).map(({ role }) => role),
+    affiliateUserRoles: user.affiliateUserRoles.filter((affiliateUserRole) => affiliateUserRole.affiliateId === affiliateId).map(({ role }) => role),
+    portalUserRoles: user.portalUserRoles.filter((portalUserRole) => portalUserRole.portalId === affiliate.portal.id).map(({ role }) => role),
   }));
 };
 

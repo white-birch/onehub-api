@@ -1,5 +1,5 @@
 import httpContext from 'express-http-context';
-import { UserRole } from '../db';
+import { AffiliateUserRole, PortalUserRole } from '../db';
 import { getUser } from '../services/users/handlers';
 import { verify } from '../utils/crypto';
 
@@ -18,7 +18,7 @@ const tokenMiddleware = async (req: Request, res: Response, next: NextFunction) 
 
     if (token) {
       const payload = (await verify(token)) as JwtPayload;
-      const user = await getUser(payload.userId, { include: [UserRole] });
+      const user = await getUser(payload.userId, { include: [AffiliateUserRole, PortalUserRole] });
       httpContext.set('token', { value: token, payload, user });
     }
   } finally {

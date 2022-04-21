@@ -1,9 +1,10 @@
 import { BelongsToMany, Column, DataType, HasMany, Table } from 'sequelize-typescript';
-import { Role } from '../../types';
-import { Affiliate, AffiliateUser, UserRole } from '.';
+import { AffiliateRole, PortalRole } from '../../types';
+import { Affiliate, AffiliateUser, AffiliateUserRole, PortalUserRole } from '.';
 import _Model from './_Model';
 
 import type { UserAttributes } from './User.types';
+import Portal from './Portal';
 
 @Table
 class User extends _Model<UserAttributes> {
@@ -22,15 +23,34 @@ class User extends _Model<UserAttributes> {
   @BelongsToMany(() => Affiliate, () => AffiliateUser)
   affiliates: Affiliate[];
 
-  @HasMany(() => UserRole)
-  roles: UserRole[];
+  @HasMany(() => AffiliateUserRole)
+  affiliateUserRoles: AffiliateUserRole[];
+
+  @HasMany(() => PortalUserRole)
+  portalUserRoles: PortalUserRole[];
 
   getPassword(): string {
     return this.getDataValue('password');
   }
 
   isAffiliateAdmin(affiliateId: string) {
-    return this.roles.some((userRole) => userRole.affiliateId === affiliateId && userRole.role === Role.Admin);
+    return this.affiliateUserRoles.some((affiliateUserRole) => affiliateUserRole.affiliateId === affiliateId && affiliateUserRole.role === AffiliateRole.Admin);
+  }
+
+  isPortalAdmin(portalId: string) {
+    return this.portalUserRoles.some((portalUserRole) => portalUserRole.portalId === portalId && portalUserRole.role === PortalRole.Admin);
+  }
+
+  async isAffiliateOrPortalAdmin(affiliateId: string) {
+    if (this.isAffiliateAdmin(affiliateId)) return true;
+
+    const affiliate = await Affiliate.findByPk(affiliateId, { include: [Portal] });
+
+    if (!affiliate || !affiliate.portal) {
+      throw new Error(`Affiliate or portal not found for affiliateId ${affiliateId}`);
+    }
+
+    return this.isPortalAdmin(affiliate.portal.id);
   }
 }
 

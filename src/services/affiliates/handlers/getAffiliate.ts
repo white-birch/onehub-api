@@ -3,10 +3,12 @@ import { NotFoundError } from '../../../errors';
 import logger from '../../../utils/logger';
 import * as validators from '../validators';
 
-const getAffiliate = async (affiliateId: string) => {
+type Options = Parameters<typeof Affiliate.findByPk>[1];
+
+const getAffiliate = async (affiliateId: string, options?: Options) => {
   validators.validate(validators.id, { id: affiliateId });
 
-  const affiliate = await Affiliate.findByPk(affiliateId);
+  const affiliate = await Affiliate.findByPk(affiliateId, options);
 
   if (!affiliate) {
     logger.warn({ message: 'Affiliate not found', affiliateId });

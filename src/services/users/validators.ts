@@ -1,5 +1,4 @@
-import { array, string } from 'yup';
-import { Role } from '../../types';
+import { string } from 'yup';
 import ErrorCode from '../../utils/errorCodes';
 
 export { default as validate } from '../../utils/validate';
@@ -20,8 +19,8 @@ export const email = { email: string().email(ErrorCode.EmailInvalid).required(Er
 
 export const password = { password: string().matches(PASSWORD_REGEX, ErrorCode.PasswordInvalid).required(ErrorCode.PasswordRequired) };
 
-export const roles = {
-  roles: array()
-    .typeError(ErrorCode.RolesInvalid)
-    .test('roles', ErrorCode.RolesInvalid, (value) => Array.isArray(value) && value.every((role) => Object.values(Role).includes(role))),
-};
+// export const roles = {
+//   roles: array()
+//     .typeError(ErrorCode.RolesInvalid)
+//     .test('roles', ErrorCode.RolesInvalid, (value) => Array.isArray(value) && value.every((role) => Object.values(AffiliateRole).includes(role))),
+// };

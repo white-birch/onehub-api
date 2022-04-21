@@ -2,13 +2,13 @@ import { BelongsTo, Column, DataType, ForeignKey, Table } from 'sequelize-typesc
 import { Affiliate, User } from '.';
 import _Model from './_Model';
 
-import type { Role } from 'types';
-import type { UserRoleAttributes } from './UserRole.types';
+import type { AffiliateRole } from 'types';
+import type { AffiliateUserRoleAttributes } from './AffiliateUserRole.types';
 
 @Table
-class UserRole extends _Model<UserRoleAttributes> {
+class AffiliateUserRole extends _Model<AffiliateUserRoleAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
-  role: Role;
+  role: AffiliateRole;
 
   @ForeignKey(() => Affiliate)
   affiliateId!: string;
@@ -23,4 +23,4 @@ class UserRole extends _Model<UserRoleAttributes> {
   user: User;
 }
 
-export default UserRole;
+export default AffiliateUserRole;

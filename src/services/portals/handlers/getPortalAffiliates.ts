@@ -1,6 +1,6 @@
 import httpContext from 'express-http-context';
 import { Affiliate } from '../../../db';
-import { Role } from '../../../types';
+import { AffiliateRole } from '../../../types';
 import * as validators from '../validators';
 import { getPortal } from '.';
 
@@ -12,7 +12,9 @@ const getPortalAffiliates = async (portalId: string) => {
   const { user } = httpContext.get('token') as TokenContext;
   const { affiliates } = await getPortal(portalId, { include: [Affiliate] });
 
-  return affiliates.filter((affiliate) => user.roles.some(({ affiliateId, role }) => affiliateId === affiliate.id && role === Role.Admin));
+  return affiliates.filter((affiliate) =>
+    user.affiliateUserRoles.some(({ affiliateId, role }) => affiliateId === affiliate.id && role === AffiliateRole.Admin)
+  );
 };
 
 export default getPortalAffiliates;

@@ -1,5 +1,5 @@
 import { BelongsTo, BelongsToMany, Column, DataType, ForeignKey, HasMany, HasOne, Table } from 'sequelize-typescript';
-import { AffiliateAddress, AffiliateTrack, AffiliateUser, Portal, Track, UserRole } from '.';
+import { AffiliateAddress, AffiliateTrack, AffiliateUser, Portal, Track, AffiliateUserRole } from '.';
 import _Model from './_Model';
 
 import type { AffiliateAttributes } from './Affiliate.types';
@@ -28,8 +28,8 @@ class Affiliate extends _Model<AffiliateAttributes> {
   @BelongsToMany(() => Track, () => AffiliateTrack)
   tracks: Track[];
 
-  @HasMany(() => UserRole)
-  userRoles: UserRole[];
+  @HasMany(() => AffiliateUserRole)
+  userRoles: AffiliateUserRole[];
 }
 
 export default Affiliate;
