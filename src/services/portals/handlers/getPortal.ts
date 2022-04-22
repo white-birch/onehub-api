@@ -6,7 +6,7 @@ import * as validators from '../validators';
 type Options = Parameters<typeof Portal.findByPk>[1];
 
 const getPortal = async (portalId: string, options?: Options) => {
-  validators.validate(validators.id, { id: portalId });
+  await validators.validate(validators.id, { id: portalId });
 
   const portal = await Portal.findByPk(portalId, options);
 

@@ -6,7 +6,7 @@ import * as validators from '../validators';
 type Options = Parameters<typeof Affiliate.findByPk>[1];
 
 const getAffiliate = async (affiliateId: string, options?: Options) => {
-  validators.validate(validators.id, { id: affiliateId });
+  await validators.validate(validators.id, { id: affiliateId });
 
   const affiliate = await Affiliate.findByPk(affiliateId, options);
 

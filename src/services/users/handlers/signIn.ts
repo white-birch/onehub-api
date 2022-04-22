@@ -5,7 +5,7 @@ import logger from '../../../utils/logger';
 import * as validators from '../validators';
 
 const signIn = async (email: string, password: string) => {
-  validators.validate([validators.email, validators.password], { email, password });
+  await validators.validate([validators.email, validators.password], { email, password });
 
   const [user] = await User.findAll({ where: { email } });
 

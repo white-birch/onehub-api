@@ -6,7 +6,7 @@ import * as validators from '../validators';
 type Options = Parameters<typeof User.findByPk>[1];
 
 const getUser = async (userId: string, options?: Options) => {
-  validators.validate(validators.id, { id: userId });
+  await validators.validate(validators.id, { id: userId });
 
   const user = await User.findByPk(userId, options);
 

@@ -3,10 +3,10 @@ import { ObjectShape } from 'yup/lib/object';
 import { BadRequestError } from '../errors';
 import logger from './logger';
 
-const validate = <Type>(schemaInput: ObjectShape | ObjectShape[], obj: Partial<Type>) => {
+const validate = async <Type>(schemaInput: ObjectShape | ObjectShape[], obj: Partial<Type>) => {
   try {
     const schema = Array.isArray(schemaInput) ? schemaInput.reduce((acc, input) => ({ ...acc, ...input }), {}) : schemaInput;
-    object(schema).validateSync(obj, { abortEarly: false });
+    await object(schema).validate(obj, { abortEarly: false });
     return [];
   } catch (error) {
     if (error instanceof ValidationError) {

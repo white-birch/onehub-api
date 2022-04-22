@@ -3,7 +3,7 @@ import * as validators from '../validators';
 import getAffiliate from './getAffiliate';
 
 const getAffiliateUsers = async (affiliateId: string) => {
-  validators.validate(validators.id, { id: affiliateId });
+  await validators.validate(validators.id, { id: affiliateId });
 
   const affiliate = await getAffiliate(affiliateId, { include: [{ model: Portal }, { model: User, include: [AffiliateUserRole, PortalUserRole] }] });
 

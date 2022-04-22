@@ -13,11 +13,13 @@ export { default as validate } from '../../utils/validate';
  */
 const PASSWORD_REGEX = /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/;
 
-export const id = { id: string().uuid(ErrorCode.IdInvalid).typeError(ErrorCode.IdInvalid).required(ErrorCode.IdRequired) };
+export const id = { id: string().typeError(ErrorCode.IdInvalid).uuid(ErrorCode.IdInvalid).required(ErrorCode.IdRequired) };
 
-export const email = { email: string().email(ErrorCode.EmailInvalid).required(ErrorCode.EmailRequired) };
+export const email = { email: string().typeError(ErrorCode.EmailInvalid).email(ErrorCode.EmailInvalid).required(ErrorCode.EmailRequired) };
 
-export const password = { password: string().matches(PASSWORD_REGEX, ErrorCode.PasswordInvalid).required(ErrorCode.PasswordRequired) };
+export const password = {
+  password: string().typeError(ErrorCode.PasswordInvalid).matches(PASSWORD_REGEX, ErrorCode.PasswordInvalid).required(ErrorCode.PasswordRequired),
+};
 
 // export const roles = {
 //   roles: array()
