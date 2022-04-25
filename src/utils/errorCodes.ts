@@ -1,4 +1,6 @@
 enum ErrorCode {
+  AffiliateIdInvalid = 'AFFILIATE_ID_INVALID',
+  AffiliateIdRequired = 'AFFILIATE_ID_REQUIRED',
   EmailInUse = 'EMAIL_IN_USE',
   EmailInvalid = 'EMAIL_INVALID',
   EmailRequired = 'EMAIL_REQUIRED',

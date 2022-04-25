@@ -1,37 +1,17 @@
 import { Router } from 'express';
 import httpContext from 'express-http-context';
-import { UnauthorizedError } from '../../errors';
 import { authMiddleware, nextOnError } from '../../middleware';
 import { AffiliateRole } from '../../types';
-import logger from '../../utils/logger';
+import { isAffiliateOrPortalAdmin, isPortalAdmin } from '../../utils/auth';
 import { addUserToAffiliate, createAffiliate, getAffiliateUsers } from './handlers';
 
-import type { Request } from 'express';
 import type { TokenContext } from '../../types';
-
-const isAffiliateOrPortalAdmin = async (req: Request, { user }: TokenContext) => {
-  const { affiliateId } = req.params;
-  const isAffiliateOrPortalAdmin = await user.isAffiliateOrPortalAdmin(affiliateId);
-
-  if (!isAffiliateOrPortalAdmin) {
-    logger.warn({ message: 'User is not an affiliate or portal admin', affiliateId, userId: user.id });
-    throw new UnauthorizedError();
-  }
-};
-
-const isPortalAdmin = async (req: Request, { user }: TokenContext) => {
-  const { portalId } = req.body;
-  if (!user.isPortalAdmin(portalId)) {
-    logger.warn({ message: 'User is not a portal admin', portalId, userId: user.id });
-    throw new UnauthorizedError();
-  }
-};
 
 const router = Router();
 
 router.post(
   '/affiliates',
-  authMiddleware([isPortalAdmin]),
+  authMiddleware([isPortalAdmin((req) => req.body.portalId)]),
   nextOnError(async (req, res) => {
     const affiliate = await createAffiliate(req.body);
 
@@ -44,7 +24,7 @@ router.post(
 
 router.get(
   '/affiliates/:affiliateId/users',
-  authMiddleware([isAffiliateOrPortalAdmin]),
+  authMiddleware([isAffiliateOrPortalAdmin((req) => req.params.affiliateId)]),
   nextOnError(async (req, res) => {
     const users = await getAffiliateUsers(req.params.affiliateId);
     res.status(200).json(users);

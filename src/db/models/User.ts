@@ -46,8 +46,12 @@ class User extends _Model<UserAttributes> {
 
     const affiliate = await Affiliate.findByPk(affiliateId, { include: [Portal] });
 
-    if (!affiliate || !affiliate.portal) {
-      throw new Error(`Affiliate or portal not found for affiliateId ${affiliateId}`);
+    if (!affiliate) {
+      throw new Error(`Affiliate with id ${affiliateId} not found`);
+    }
+
+    if (!affiliate.portal) {
+      throw new Error(`Affiliate with id ${affiliateId} has no portal`);
     }
 
     return this.isPortalAdmin(affiliate.portal.id);
