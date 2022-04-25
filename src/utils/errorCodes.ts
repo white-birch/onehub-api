@@ -10,10 +10,14 @@ enum ErrorCode {
   NameRequired = 'NAME_REQUIRED',
   PasswordInvalid = 'PASSWORD_INVALID',
   PasswordRequired = 'PASSWORD_REQUIRED',
+  PlanIdInvalid = 'PLAN_ID_INVALID',
+  PlanIdRequired = 'PLAN_ID_REQUIRED',
   PortalIdInvalid = 'PORTAL_ID_INVALID',
   PortalIdRequired = 'PORTAL_ID_REQUIRED',
   RolesInvalid = 'ROLES_INVALID',
   RolesRequired = 'ROLES_REQUIRED',
+  UserIdInvalid = 'USER_ID_INVALID',
+  UserIdRequired = 'USER_ID_REQUIRED',
 }
 
 export default ErrorCode;

@@ -5,6 +5,7 @@ import _Model from './_Model';
 
 import type { UserAttributes } from './User.types';
 import Portal from './Portal';
+import Membership from './Membership';
 
 @Table
 class User extends _Model<UserAttributes> {
@@ -28,6 +29,9 @@ class User extends _Model<UserAttributes> {
 
   @HasMany(() => PortalUserRole)
   portalUserRoles: PortalUserRole[];
+
+  @HasMany(() => Membership)
+  memberships: Membership[];
 
   getPassword(): string {
     return this.getDataValue('password');

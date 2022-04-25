@@ -1,5 +1,5 @@
 import { BelongsToMany, Column, DataType, Table } from 'sequelize-typescript';
-import { AffiliateTrack } from '.';
+import { AffiliateTrack, Plan, PlanTrack } from '.';
 import _Model from './_Model';
 
 import type { TrackAttributes } from './Track.types';
@@ -12,6 +12,9 @@ class Track extends _Model<TrackAttributes> {
 
   @BelongsToMany(() => Affiliate, () => AffiliateTrack)
   affiliates: Affiliate[];
+
+  @BelongsToMany(() => Plan, () => PlanTrack)
+  plans: Plan[];
 }
 
 export default Track;

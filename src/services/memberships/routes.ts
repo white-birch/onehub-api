@@ -1,0 +1,17 @@
+import { Router } from 'express';
+import { authMiddleware, nextOnError } from '../../middleware';
+import { isAffiliateOrPortalAdmin } from '../../utils/auth';
+import { createMembership } from './handlers';
+
+const router = Router();
+
+router.post(
+  '/memberships',
+  authMiddleware([isAffiliateOrPortalAdmin((req) => req.body.affiliateId)]),
+  nextOnError(async (req, res) => {
+    const membership = await createMembership(req.body);
+    res.status(201).json(membership);
+  })
+);
+
+export default router;
