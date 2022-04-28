@@ -21,6 +21,8 @@ const tokenMiddleware = async (req: Request, res: Response, next: NextFunction) 
       const user = await getUser(payload.userId, { include: [AffiliateUserRole, PortalUserRole] });
       httpContext.set('token', { value: token, payload, user });
     }
+  } catch {
+    // ! Swallow token validation errors -- no need to do anything since the token won't get added to context
   } finally {
     next();
   }
