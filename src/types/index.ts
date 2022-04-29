@@ -11,6 +11,11 @@ export enum AffiliateRole {
   Member = 'MEMBER',
 }
 
+export enum InviteType {
+  Portal = 'PORTAL',
+  Affiliate = 'AFFILIATE',
+}
+
 export enum PortalRole {
   Admin = 'ADMIN',
 }

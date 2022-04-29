@@ -1,6 +1,7 @@
 import { BelongsToMany, HasMany, Table } from 'sequelize-typescript';
-import { Affiliate, PortalUser, PortalUserRole, User } from '.';
+import { InviteType } from '../../types';
 import _Model from './_Model';
+import { Affiliate, Invite, PortalUser, PortalUserRole, User } from '.';
 
 import type { PortalAttributes } from './Portal.types';
 
@@ -14,6 +15,9 @@ class Portal extends _Model<PortalAttributes> {
 
   @HasMany(() => PortalUserRole)
   userRoles: PortalUserRole[];
+
+  @HasMany(() => Invite, { foreignKey: 'invitableId', scope: { invitableType: InviteType.Portal }, constraints: false })
+  invites: Invite[];
 }
 
 export default Portal;

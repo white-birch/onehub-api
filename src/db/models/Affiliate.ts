@@ -1,6 +1,7 @@
 import { BelongsTo, BelongsToMany, Column, DataType, ForeignKey, HasMany, HasOne, Table } from 'sequelize-typescript';
-import { AffiliateAddress, AffiliateTrack, AffiliateUser, Portal, Track, AffiliateUserRole } from '.';
+import { InviteType } from '../../types';
 import _Model from './_Model';
+import { AffiliateAddress, AffiliateTrack, AffiliateUser, Portal, Track, AffiliateUserRole, Invite } from '.';
 
 import type { AffiliateAttributes } from './Affiliate.types';
 import User from './User';
@@ -30,6 +31,9 @@ class Affiliate extends _Model<AffiliateAttributes> {
 
   @HasMany(() => AffiliateUserRole)
   userRoles: AffiliateUserRole[];
+
+  @HasMany(() => Invite, { foreignKey: 'invitableId', scope: { invitableType: InviteType.Portal }, constraints: false })
+  invites: Invite[];
 }
 
 export default Affiliate;

@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import { authMiddleware, nextOnError } from '../../middleware';
-import { isAffiliateOrPortalAdmin } from '../../utils/auth';
+import { isAffiliateAdmin } from '../../utils/auth';
 import { createTrack } from './handlers';
 
 const router = Router();
 
 router.post(
   '/tracks',
-  authMiddleware([isAffiliateOrPortalAdmin((req) => req.body.affiliateId)]),
+  authMiddleware([isAffiliateAdmin((req) => req.body.affiliateId)]),
   nextOnError(async (req, res) => {
     const track = await createTrack(req.body);
     res.status(201).json(track);
