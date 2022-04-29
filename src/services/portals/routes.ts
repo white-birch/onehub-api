@@ -2,7 +2,7 @@ import { Router } from 'express';
 import httpContext from 'express-http-context';
 import { authMiddleware, nextOnError } from '../../middleware';
 import { PortalRole } from '../../types';
-import { addPortalRoleToUser, createPortal, getPortalAffiliates } from './handlers';
+import { addUserToPortal, createPortal, getPortalAffiliates } from './handlers';
 
 import type { TokenContext } from '../../types';
 
@@ -15,7 +15,7 @@ router.post(
     const portal = await createPortal(req.body);
 
     const { user } = httpContext.get('token') as TokenContext;
-    await addPortalRoleToUser(portal, user, PortalRole.Admin);
+    await addUserToPortal(portal, user, PortalRole.Admin);
 
     res.status(201).json(portal);
   })

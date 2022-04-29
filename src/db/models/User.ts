@@ -1,6 +1,6 @@
 import { BelongsToMany, Column, DataType, HasMany, Table } from 'sequelize-typescript';
 import { AffiliateRole, PortalRole } from '../../types';
-import { Affiliate, AffiliateUser, AffiliateUserRole, PortalUserRole } from '.';
+import { Affiliate, AffiliateUser, AffiliateUserRole, PortalUser, PortalUserRole } from '.';
 import _Model from './_Model';
 
 import type { UserAttributes } from './User.types';
@@ -20,6 +20,9 @@ class User extends _Model<UserAttributes> {
   set password(value: string) {
     this.setDataValue('password', value);
   }
+
+  @BelongsToMany(() => Portal, () => PortalUser)
+  portals: Portal[];
 
   @BelongsToMany(() => Affiliate, () => AffiliateUser)
   affiliates: Affiliate[];

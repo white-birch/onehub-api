@@ -7,6 +7,7 @@ export { default as Membership } from './Membership';
 export { default as Plan } from './Plan';
 export { default as PlanTrack } from './PlanTrack';
 export { default as Portal } from './Portal';
+export { default as PortalUser } from './PortalUser';
 export { default as Track } from './Track';
 export { default as User } from './User';
 export { default as PortalUserRole } from './PortalUserRole';
