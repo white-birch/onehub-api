@@ -5,42 +5,51 @@ import ErrorCode from '../../utils/errorCodes';
 
 export { default as validate } from '../../utils/validate';
 
-export const id = { id: string().typeError(ErrorCode.IdInvalid).uuid(ErrorCode.IdInvalid).required(ErrorCode.IdRequired) };
-
 export const code = {
   code: string()
     .typeError(ErrorCode.CodeInvalid)
     .test({
       name: 'is-valid-invite-code-id',
       message: ErrorCode.CodeInUse,
-      test: async (value) => !(await Invite.findOne({ where: { code: value } })),
+      test: async (value) => !(await Invite.findByPk(value)),
     })
     .required(ErrorCode.CodeRequired),
 };
 
-export const invitableType = {
-  invitableType: string()
-    .typeError(ErrorCode.InvitableTypeInvalid)
+export const codeExists = {
+  code: string()
+    .typeError(ErrorCode.CodeInvalid)
     .test({
-      name: 'is-valid-invitable-type',
-      message: ErrorCode.InvitableTypeInvalid,
-      test: (value) => Object.values(InviteType).includes(value as InviteType),
+      name: 'does-invite-code-exist',
+      message: ErrorCode.CodeInvalid,
+      test: async (value) => !!(await Invite.findByPk(value)),
     })
-    .required(ErrorCode.InvitableTypeRequired),
+    .required(ErrorCode.CodeRequired),
 };
 
-export const invitableId = {
-  invitableId: string()
-    .typeError(ErrorCode.InvitableIdInvalid)
-    .uuid(ErrorCode.InvitableIdInvalid)
+export const type = {
+  type: string()
+    .typeError(ErrorCode.TypeInvalid)
     .test({
-      name: 'is-valid-invitable-id',
-      message: ErrorCode.InvitableIdInvalid,
+      name: 'is-valid-invite-type',
+      message: ErrorCode.TypeInvalid,
+      test: (value) => Object.values(InviteType).includes(value as InviteType),
+    })
+    .required(ErrorCode.TypeRequired),
+};
+
+export const id = {
+  id: string()
+    .typeError(ErrorCode.IdInvalid)
+    .uuid(ErrorCode.IdInvalid)
+    .test({
+      name: 'is-valid-invite-id',
+      message: ErrorCode.IdInvalid,
       test: async function (value) {
-        if (this.parent.invitableType === InviteType.Portal) return !!(await Portal.findByPk(value));
-        if (this.parent.invitableType === InviteType.Affiliate) return !!(await Affiliate.findByPk(value));
+        if (this.parent.type === InviteType.Portal) return !!(await Portal.findByPk(value));
+        if (this.parent.type === InviteType.Affiliate) return !!(await Affiliate.findByPk(value));
         return false;
       },
     })
-    .required(ErrorCode.InvitableIdRequired),
+    .required(ErrorCode.IdRequired),
 };

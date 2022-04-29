@@ -32,7 +32,7 @@ class Affiliate extends _Model<AffiliateAttributes> {
   @HasMany(() => AffiliateUserRole)
   userRoles: AffiliateUserRole[];
 
-  @HasMany(() => Invite, { foreignKey: 'invitableId', scope: { invitableType: InviteType.Portal }, constraints: false })
+  @HasMany(() => Invite, { foreignKey: 'id', scope: { type: InviteType.Portal }, constraints: false })
   invites: Invite[];
 }
 

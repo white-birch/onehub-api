@@ -16,7 +16,7 @@ class Portal extends _Model<PortalAttributes> {
   @HasMany(() => PortalUserRole)
   userRoles: PortalUserRole[];
 
-  @HasMany(() => Invite, { foreignKey: 'invitableId', scope: { invitableType: InviteType.Portal }, constraints: false })
+  @HasMany(() => Invite, { foreignKey: 'id', scope: { type: InviteType.Portal }, constraints: false })
   invites: Invite[];
 }
 
