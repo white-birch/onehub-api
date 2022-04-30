@@ -1,5 +1,5 @@
 import { BelongsTo, Column, CreatedAt, DataType, DeletedAt, Model, Table, UpdatedAt } from 'sequelize-typescript';
-import { Affiliate, Portal } from '.';
+import { Affiliate, Organization } from '.';
 
 import type { InviteType } from 'types';
 import type { InviteAttributes } from '.';
@@ -15,8 +15,8 @@ class Invite extends Model<InviteAttributes> {
   @Column(DataType.UUID)
   id!: string;
 
-  @BelongsTo(() => Portal, { foreignKey: 'id', constraints: false })
-  portal: Portal;
+  @BelongsTo(() => Organization, { foreignKey: 'id', constraints: false })
+  organization: Organization;
 
   @BelongsTo(() => Affiliate, { foreignKey: 'id', constraints: false })
   affiliate: Affiliate;

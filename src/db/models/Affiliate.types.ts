@@ -1,6 +1,6 @@
 export interface AffiliateAttributes {
   id?: string;
   name: string;
-  portalId: string;
+  organizationId: string;
   website?: string;
 }

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import httpContext from 'express-http-context';
 import { authMiddleware, nextOnError } from '../../middleware';
 import { AffiliateRole } from '../../types';
-import { isAffiliateAdmin, isPortalAdmin } from '../../utils/auth';
+import { isAffiliateAdmin, isOrganizationAdmin } from '../../utils/auth';
 import { addUserToAffiliate, createAffiliate, getAffiliateUsers } from './handlers';
 
 import type { TokenContext } from '../../types';
@@ -11,7 +11,7 @@ const router = Router();
 
 router.post(
   '/affiliates',
-  authMiddleware([isPortalAdmin((req) => req.body.portalId)]),
+  authMiddleware([isOrganizationAdmin((req) => req.body.organizationId)]),
   nextOnError(async (req, res) => {
     const affiliate = await createAffiliate(req.body);
 

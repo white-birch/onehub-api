@@ -1,10 +1,10 @@
 import { BelongsToMany, Column, DataType, HasMany, Table } from 'sequelize-typescript';
-import { AffiliateRole, InviteType, PortalRole } from '../../types';
-import { Affiliate, AffiliateUser, AffiliateUserRole, PortalUser, PortalUserRole } from '.';
+import { AffiliateRole, InviteType, OrganizationRole } from '../../types';
+import { Affiliate, AffiliateUser, AffiliateUserRole, OrganizationUser, OrganizationUserRole } from '.';
 import _Model from './_Model';
 
 import type { UserAttributes } from './User.types';
-import Portal from './Portal';
+import Organization from './Organization';
 import Membership from './Membership';
 
 @Table
@@ -21,8 +21,8 @@ class User extends _Model<UserAttributes> {
     this.setDataValue('password', value);
   }
 
-  @BelongsToMany(() => Portal, () => PortalUser)
-  portals: Portal[];
+  @BelongsToMany(() => Organization, () => OrganizationUser)
+  organizations: Organization[];
 
   @BelongsToMany(() => Affiliate, () => AffiliateUser)
   affiliates: Affiliate[];
@@ -30,8 +30,8 @@ class User extends _Model<UserAttributes> {
   @HasMany(() => AffiliateUserRole)
   affiliateUserRoles: AffiliateUserRole[];
 
-  @HasMany(() => PortalUserRole)
-  portalUserRoles: PortalUserRole[];
+  @HasMany(() => OrganizationUserRole)
+  organizationUserRoles: OrganizationUserRole[];
 
   @HasMany(() => Membership)
   memberships: Membership[];
@@ -47,28 +47,28 @@ class User extends _Model<UserAttributes> {
 
     if (isAdminOfAffiliate) return true;
 
-    const affiliate = await Affiliate.findByPk(affiliateId, { include: [Portal] });
+    const affiliate = await Affiliate.findByPk(affiliateId, { include: [Organization] });
 
     if (!affiliate) {
       throw new Error(`Affiliate with id ${affiliateId} not found`);
     }
 
-    if (!affiliate.portal) {
-      throw new Error(`Affiliate with id ${affiliateId} has no portal`);
+    if (!affiliate.organization) {
+      throw new Error(`Affiliate with id ${affiliateId} has no organization`);
     }
 
-    return this.isPortalAdmin(affiliate.portal.id);
+    return this.isOrganizationAdmin(affiliate.organization.id);
   }
 
-  isPortalAdmin(portalId: string) {
-    return this.portalUserRoles
-      .filter((portalUserRole) => portalUserRole.portalId === portalId)
-      .some((portalUserRole) => portalUserRole.role === PortalRole.Admin);
+  isOrganizationAdmin(organizationId: string) {
+    return this.organizationUserRoles
+      .filter((organizationUserRole) => organizationUserRole.organizationId === organizationId)
+      .some((organizationUserRole) => organizationUserRole.role === OrganizationRole.Admin);
   }
 
   async isAdmin(type: InviteType, id: string) {
     if (type === InviteType.Affiliate) return this.isAffiliateAdmin(id);
-    if (type === InviteType.Portal) return this.isPortalAdmin(id);
+    if (type === InviteType.Organization) return this.isOrganizationAdmin(id);
     throw new Error(`Invalid type (${type}) provided when checking if user is admin`);
   }
 }

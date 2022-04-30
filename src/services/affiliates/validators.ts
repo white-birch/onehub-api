@@ -1,5 +1,5 @@
 import { string } from 'yup';
-import { Portal } from '../../db';
+import { Organization } from '../../db';
 import ErrorCode from '../../utils/errorCodes';
 
 export { default as validate } from '../../utils/validate';
@@ -8,14 +8,14 @@ export const id = { id: string().typeError(ErrorCode.IdInvalid).uuid(ErrorCode.I
 
 export const name = { name: string().typeError(ErrorCode.NameInvalid).required(ErrorCode.NameRequired) };
 
-export const portalId = {
-  portalId: string()
-    .typeError(ErrorCode.PortalIdInvalid)
-    .uuid(ErrorCode.PortalIdInvalid)
+export const organizationId = {
+  organizationId: string()
+    .typeError(ErrorCode.OrganizationIdInvalid)
+    .uuid(ErrorCode.OrganizationIdInvalid)
     .test({
-      name: 'is-valid-portal-id',
-      message: ErrorCode.PortalIdInvalid,
-      test: async (value) => !!(await Portal.findByPk(value)),
+      name: 'is-valid-organization-id',
+      message: ErrorCode.OrganizationIdInvalid,
+      test: async (value) => !!(await Organization.findByPk(value)),
     })
-    .required(ErrorCode.PortalIdRequired),
+    .required(ErrorCode.OrganizationIdRequired),
 };

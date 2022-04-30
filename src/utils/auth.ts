@@ -7,7 +7,7 @@ import type { TokenContext } from '../types';
 
 export type AuthAddOn = (req: Request, context: TokenContext) => Promise<void>;
 type IsAffiliateAdmin = (mapRequest: (req: Request) => string) => AuthAddOn;
-type IsPortalAdmin = (mapRequest: (req: Request) => string) => AuthAddOn;
+type IsOrganizationAdmin = (mapRequest: (req: Request) => string) => AuthAddOn;
 type IsAdmin = (mapRequest: (req: Request) => { type: InviteType; id: string }) => AuthAddOn;
 
 export const isAffiliateAdmin: IsAffiliateAdmin =
@@ -17,25 +17,25 @@ export const isAffiliateAdmin: IsAffiliateAdmin =
     const isAffiliateAdmin = await user.isAffiliateAdmin(affiliateId);
 
     if (!isAffiliateAdmin) {
-      logger.warn({ message: 'User is not an affiliate or portal admin', affiliateId, userId: user.id });
+      logger.warn({ message: 'User is not an affiliate or organization admin', affiliateId, userId: user.id });
       throw new UnauthorizedError();
     }
   };
 
-export const isPortalAdmin: IsPortalAdmin =
+export const isOrganizationAdmin: IsOrganizationAdmin =
   (mapRequest) =>
   async (req, { user }) => {
-    const portalId = mapRequest(req);
-    const isPortalAdmin = user.isPortalAdmin(portalId);
+    const organizationId = mapRequest(req);
+    const isOrganizationAdmin = user.isOrganizationAdmin(organizationId);
 
-    if (!isPortalAdmin) {
-      logger.warn({ message: 'User is not a portal admin', portalId, userId: user.id });
+    if (!isOrganizationAdmin) {
+      logger.warn({ message: 'User is not a organization admin', organizationId, userId: user.id });
       throw new UnauthorizedError();
     }
   };
 
 export const isAdmin: IsAdmin = (mapRequest) => async (req, context) => {
   const { type, id } = mapRequest(req);
-  if (type === InviteType.Portal) isPortalAdmin(() => id)(req, context);
+  if (type === InviteType.Organization) isOrganizationAdmin(() => id)(req, context);
   if (type === InviteType.Affiliate) isAffiliateAdmin(() => id)(req, context);
 };

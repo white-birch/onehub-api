@@ -1,5 +1,5 @@
 import { string } from 'yup';
-import { Affiliate, Invite, Portal } from '../../db';
+import { Affiliate, Invite, Organization } from '../../db';
 import { InviteType } from '../../types';
 import ErrorCode from '../../utils/errorCodes';
 
@@ -46,7 +46,7 @@ export const id = {
       name: 'is-valid-invite-id',
       message: ErrorCode.IdInvalid,
       test: async function (value) {
-        if (this.parent.type === InviteType.Portal) return !!(await Portal.findByPk(value));
+        if (this.parent.type === InviteType.Organization) return !!(await Organization.findByPk(value));
         if (this.parent.type === InviteType.Affiliate) return !!(await Affiliate.findByPk(value));
         return false;
       },
