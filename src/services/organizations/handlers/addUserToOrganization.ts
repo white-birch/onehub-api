@@ -1,12 +1,13 @@
 import { User, Organization, OrganizationUserRole } from '../../../db';
+import { OrganizationRole } from '../../../types';
 
-import type { OrganizationRole } from '../../../types';
-
-const addUserToOrganization = async (organization: Organization, user: User, role: OrganizationRole) => {
+const addUserToOrganization = async (organization: Organization, user: User, options: { isAdmin: boolean } = { isAdmin: false }) => {
   await user.$add('organizations', organization);
 
-  const organizationUserRole = new OrganizationUserRole({ role, organizationId: organization.id, userId: user.id });
-  await organizationUserRole.save();
+  if (options.isAdmin) {
+    const organizationUserRole = new OrganizationUserRole({ role: OrganizationRole.Admin, organizationId: organization.id, userId: user.id });
+    await organizationUserRole.save();
+  }
 };
 
 export default addUserToOrganization;

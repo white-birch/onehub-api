@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { authMiddleware, nextOnError } from '../../middleware';
 import { isAdmin } from '../../utils/auth';
-import { createInvite, getInvite } from './handlers';
+import { acceptInvite, createInvite, getInvite } from './handlers';
 
 const router = Router();
 
@@ -19,6 +19,15 @@ router.get(
   authMiddleware(),
   nextOnError(async (req, res) => {
     const invite = await getInvite(req.params.code);
+    res.status(201).json(invite);
+  })
+);
+
+router.put(
+  '/invites/:code/accept',
+  authMiddleware(),
+  nextOnError(async (req, res) => {
+    const invite = await acceptInvite(req.params.code);
     res.status(201).json(invite);
   })
 );

@@ -22,7 +22,7 @@ const tokenMiddleware = async (req: Request, res: Response, next: NextFunction) 
       httpContext.set('token', { value: token, payload, user });
     }
   } catch {
-    // ! Swallow token validation errors -- no need to do anything since the token won't get added to context
+    // * Swallow token validation errors -- no need to do anything since the token won't get added to context
   } finally {
     next();
   }

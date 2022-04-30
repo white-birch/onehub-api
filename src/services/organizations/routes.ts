@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import httpContext from 'express-http-context';
 import { authMiddleware, nextOnError } from '../../middleware';
-import { OrganizationRole } from '../../types';
 import { addUserToOrganization, createOrganization, getOrganizationAffiliates } from './handlers';
 
 import type { TokenContext } from '../../types';
@@ -15,7 +14,7 @@ router.post(
     const organization = await createOrganization(req.body);
 
     const { user } = httpContext.get('token') as TokenContext;
-    await addUserToOrganization(organization, user, OrganizationRole.Admin);
+    await addUserToOrganization(organization, user, { isAdmin: true });
 
     res.status(201).json(organization);
   })
