@@ -19,7 +19,7 @@ router.get(
   authMiddleware(),
   nextOnError(async (req, res) => {
     const invite = await getInvite(req.params.code);
-    res.status(201).json(invite);
+    res.status(200).json(invite);
   })
 );
 
@@ -28,7 +28,7 @@ router.put(
   authMiddleware(),
   nextOnError(async (req, res) => {
     const invite = await acceptInvite(req.params.code);
-    res.status(201).json(invite);
+    res.status(200).json(invite);
   })
 );
 
