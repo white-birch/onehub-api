@@ -32,6 +32,7 @@ const authMiddleware = (addOns?: AuthAddOn[]) =>
           await addOn(req, tokenContext);
         }
       }
+
       next();
     } catch (error) {
       if (error instanceof UnauthorizedError) {

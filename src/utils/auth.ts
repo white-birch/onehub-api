@@ -36,6 +36,6 @@ export const isOrganizationAdmin: IsOrganizationAdmin =
 
 export const isAdmin: IsAdmin = (mapRequest) => async (req, context) => {
   const { type, id } = mapRequest(req);
-  if (type === InviteType.Organization) isOrganizationAdmin(() => id)(req, context);
-  if (type === InviteType.Affiliate) isAffiliateAdmin(() => id)(req, context);
+  if (type === InviteType.Organization) await isOrganizationAdmin(() => id)(req, context);
+  if (type === InviteType.Affiliate) await isAffiliateAdmin(() => id)(req, context);
 };
