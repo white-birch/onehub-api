@@ -2,12 +2,23 @@ import { Router } from 'express';
 import httpContext from 'express-http-context';
 import { authMiddleware, nextOnError } from '../../middleware';
 import { AffiliateRole } from '../../types';
-import { isAffiliateAdmin, isOrganizationAdmin } from '../../utils/auth';
-import { addUserToAffiliate, createAffiliate, getAffiliateUsers } from './handlers';
+import { isOrganizationAdmin } from '../../utils/auth';
+import { addUserToAffiliate, createAffiliate, getAffiliates } from './handlers';
 
 import type { TokenContext } from '../../types';
 
 const router = Router();
+
+router.get(
+  '/affiliates',
+  authMiddleware(),
+  nextOnError(async (req, res) => {
+    const organizationId = req.query.organizationId as string;
+    const { user } = httpContext.get('token') as TokenContext;
+    const affiliates = await getAffiliates(organizationId, user);
+    res.status(200).json(affiliates);
+  })
+);
 
 router.post(
   '/affiliates',
@@ -19,15 +30,6 @@ router.post(
     await addUserToAffiliate(affiliate, user, AffiliateRole.Admin);
 
     res.status(201).json(affiliate);
-  })
-);
-
-router.get(
-  '/affiliates/:affiliateId/users',
-  authMiddleware([isAffiliateAdmin((req) => req.params.affiliateId)]),
-  nextOnError(async (req, res) => {
-    const users = await getAffiliateUsers(req.params.affiliateId);
-    res.status(200).json(users);
   })
 );
 

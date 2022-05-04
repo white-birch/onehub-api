@@ -1,7 +1,10 @@
 import { Router } from 'express';
+import httpContext from 'express-http-context';
 import { authMiddleware, nextOnError } from '../../middleware';
 import { isAdmin } from '../../utils/auth';
 import { acceptInvite, createInvite, getInvite } from './handlers';
+
+import type { TokenContext } from 'types';
 
 const router = Router();
 
@@ -27,7 +30,8 @@ router.put(
   '/invites/:code/accept',
   authMiddleware(),
   nextOnError(async (req, res) => {
-    const invite = await acceptInvite(req.params.code);
+    const { user } = httpContext.get('token') as TokenContext;
+    const invite = await acceptInvite(req.params.code, user);
     res.status(200).json(invite);
   })
 );

@@ -27,7 +27,9 @@ const authMiddleware = (addOns?: AuthAddOn[]) =>
         throw new UnauthorizedError();
       }
 
-      if (addOns) {
+      const { isSuperUser } = tokenContext.user;
+
+      if (addOns && !isSuperUser) {
         for (const addOn of addOns) {
           await addOn(req, tokenContext);
         }

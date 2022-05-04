@@ -1,11 +1,9 @@
-import httpContext from 'express-http-context';
 import { Affiliate, Organization } from '../../../db';
 import { addUserToAffiliate } from '../../../services/affiliates/handlers';
 import { AffiliateRole, InviteType } from '../../../types';
 import { getInvite } from '.';
 
 import type { User } from 'db';
-import type { TokenContext } from 'types';
 
 const acceptAffiliateInvite = async (user: User, affiliateId: string): Promise<void> => {
   const affiliate = await Affiliate.findByPk(affiliateId);
@@ -31,9 +29,8 @@ const acceptOrganizationInvite = async (user: User, organizationId: string): Pro
   }
 };
 
-const acceptInvite = async (code: string) => {
+const acceptInvite = async (code: string, user: User) => {
   const invite = await getInvite(code);
-  const { user } = httpContext.get('token') as TokenContext;
 
   if (invite.type === InviteType.Organization) {
     return acceptOrganizationInvite(user, invite.id);

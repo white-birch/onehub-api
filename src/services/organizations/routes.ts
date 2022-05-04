@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import httpContext from 'express-http-context';
 import { authMiddleware, nextOnError } from '../../middleware';
-import { addUserToOrganization, createOrganization, getOrganizationAffiliates } from './handlers';
+import { addUserToOrganization, createOrganization } from './handlers';
 
 import type { TokenContext } from '../../types';
 
@@ -17,15 +17,6 @@ router.post(
     await addUserToOrganization(organization, user, { isAdmin: true });
 
     res.status(201).json(organization);
-  })
-);
-
-router.get(
-  '/organizations/:organizationId/affiliates',
-  authMiddleware(), // No need for more detailed auth -- only affiliates the user is an admin of will be returned.
-  nextOnError(async (req, res) => {
-    const affiliates = await getOrganizationAffiliates(req.params.organizationId);
-    res.status(200).json(affiliates);
   })
 );
 

@@ -12,6 +12,9 @@ class User extends _Model<UserAttributes> {
   @Column({ type: DataType.STRING, allowNull: false, unique: true })
   email!: string;
 
+  @Column({ type: DataType.BOOLEAN, allowNull: false, defaultValue: false })
+  isSuperUser!: boolean;
+
   @Column({ type: DataType.STRING, allowNull: false })
   get password(): string {
     return undefined as unknown as string;
