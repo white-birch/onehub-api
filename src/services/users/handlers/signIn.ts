@@ -5,7 +5,7 @@ import logger from '../../../utils/logger';
 import * as validators from '../validators';
 import signToken from './signToken';
 
-const signIn = async (email: string, password: string) => {
+const signIn = async (email: string, password: string, organizationId?: string) => {
   await validators.validate([validators.email, validators.password], { email, password });
 
   const [user] = await User.findAll({ where: { email } });
@@ -22,7 +22,7 @@ const signIn = async (email: string, password: string) => {
     throw new UnauthorizedError();
   }
 
-  const token = await signToken(user);
+  const token = await signToken(user, organizationId);
   return { token, user };
 };
 

@@ -8,7 +8,8 @@ router.post(
   '/auth/sign-in',
   nextOnError(async (req, res) => {
     const { email, password } = req.body;
-    const { token, user } = await signIn(email, password);
+    const organizationId = req.query.organizationId as string | undefined;
+    const { token, user } = await signIn(email, password, organizationId);
     res.status(200).cookie('token', token).json({ token, user });
   })
 );
@@ -18,7 +19,7 @@ router.post(
   nextOnError(async (req, res) => {
     const { email, password } = req.body;
     const { token, user } = await signUp(email, password);
-    res.status(200).cookie('token', token).json({ token, user });
+    res.status(201).cookie('token', token).json({ token, user });
   })
 );
 

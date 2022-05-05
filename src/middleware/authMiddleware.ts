@@ -22,14 +22,14 @@ const authMiddleware = (addOns?: AuthAddOn[]) =>
         throw new UnauthorizedError();
       }
 
-      if (!tokenContext.user) {
+      const { user } = tokenContext;
+
+      if (!user) {
         logger.warn('Unable to find user from token');
         throw new UnauthorizedError();
       }
 
-      const { isSuperUser } = tokenContext.user;
-
-      if (addOns && !isSuperUser) {
+      if (addOns && !user.isSuperUser) {
         for (const addOn of addOns) {
           await addOn(req, tokenContext);
         }

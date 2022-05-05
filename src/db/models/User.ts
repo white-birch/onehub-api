@@ -64,6 +64,8 @@ class User extends _Model<UserAttributes> {
   }
 
   isOrganizationAdmin(organizationId: string) {
+    if (this.isSuperUser) return true;
+
     return this.organizationUserRoles
       .filter((organizationUserRole) => organizationUserRole.organizationId === organizationId)
       .some((organizationUserRole) => organizationUserRole.role === OrganizationRole.Admin);
