@@ -26,7 +26,7 @@ export const isOrganizationAdmin: IsOrganizationAdmin =
   (mapRequest) =>
   async (req, { user }) => {
     const organizationId = mapRequest(req);
-    const isOrganizationAdmin = user.isOrganizationAdmin(organizationId);
+    const isOrganizationAdmin = await user.isOrganizationAdmin(organizationId);
 
     if (!isOrganizationAdmin) {
       logger.warn({ message: 'User is not a organization admin', organizationId, userId: user.id });

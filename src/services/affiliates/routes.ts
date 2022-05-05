@@ -22,7 +22,7 @@ router.get(
 
 router.post(
   '/affiliates',
-  authMiddleware([isOrganizationAdmin((req) => req.body.organizationId)]),
+  authMiddleware([isOrganizationAdmin((req) => req.query.organizationId as string)]),
   nextOnError(async (req, res) => {
     const affiliate = await createAffiliate(req.body);
 

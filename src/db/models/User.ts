@@ -44,11 +44,15 @@ class User extends _Model<UserAttributes> {
   }
 
   async isAffiliateAdmin(affiliateId: string) {
-    const isAdminOfAffiliate = this.affiliateUserRoles
-      .filter((affiliateUserRole) => affiliateUserRole.affiliateId === affiliateId)
-      .some((affiliateUserRole) => affiliateUserRole.role === AffiliateRole.Admin);
+    const affiliateUserRoles = await this.$get('affiliateUserRoles');
 
-    if (isAdminOfAffiliate) return true;
+    if (affiliateUserRoles) {
+      const isAdminOfAffiliate = affiliateUserRoles
+        .filter((affiliateUserRole) => affiliateUserRole.affiliateId === affiliateId)
+        .some((affiliateUserRole) => affiliateUserRole.role === AffiliateRole.Admin);
+
+      if (isAdminOfAffiliate) return true;
+    }
 
     const affiliate = await Affiliate.findByPk(affiliateId, { include: [Organization] });
 
@@ -63,10 +67,14 @@ class User extends _Model<UserAttributes> {
     return this.isOrganizationAdmin(affiliate.organization.id);
   }
 
-  isOrganizationAdmin(organizationId: string) {
+  async isOrganizationAdmin(organizationId: string) {
     if (this.isSuperUser) return true;
 
-    return this.organizationUserRoles
+    const organizationUserRoles = await this.$get('organizationUserRoles');
+
+    if (!organizationUserRoles) return false;
+
+    return organizationUserRoles
       .filter((organizationUserRole) => organizationUserRole.organizationId === organizationId)
       .some((organizationUserRole) => organizationUserRole.role === OrganizationRole.Admin);
   }
