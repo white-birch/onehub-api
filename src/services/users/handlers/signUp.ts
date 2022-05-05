@@ -1,9 +1,9 @@
-import { sign } from '../../../utils/crypto';
 import { createUser } from '../../users/handlers';
+import signToken from './signToken';
 
 const signUp = async (email: string, password: string) => {
   const user = await createUser({ email, password });
-  const token = await sign({ userId: user.id });
+  const token = await signToken(user);
   return { token, user };
 };
 

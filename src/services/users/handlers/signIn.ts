@@ -1,8 +1,9 @@
 import { User } from '../../../db';
 import { UnauthorizedError } from '../../../errors';
-import { compare, sign } from '../../../utils/crypto';
+import { compare } from '../../../utils/crypto';
 import logger from '../../../utils/logger';
 import * as validators from '../validators';
+import signToken from './signToken';
 
 const signIn = async (email: string, password: string) => {
   await validators.validate([validators.email, validators.password], { email, password });
@@ -21,7 +22,7 @@ const signIn = async (email: string, password: string) => {
     throw new UnauthorizedError();
   }
 
-  const token = await sign({ userId: user.id });
+  const token = await signToken(user);
   return { token, user };
 };
 
