@@ -19,7 +19,6 @@ router.post(
 
 router.get(
   '/invites/:code',
-  authMiddleware(),
   nextOnError(async (req, res) => {
     const invite = await getInvite(req.params.code);
     res.status(200).json(invite);
