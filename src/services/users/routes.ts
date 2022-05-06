@@ -1,8 +1,20 @@
 import { Router } from 'express';
-import { nextOnError } from '../../middleware';
+import httpContext from 'express-http-context';
+import { authMiddleware, nextOnError } from '../../middleware';
 import { signIn, signUp } from './handlers';
 
+import type { TokenContext } from 'types';
+
 const router = Router();
+
+router.get(
+  '/auth/me',
+  authMiddleware(),
+  nextOnError(async (req, res) => {
+    const { value: token, payload } = httpContext.get('token') as TokenContext;
+    res.status(200).json({ token, ...payload });
+  })
+);
 
 router.post(
   '/auth/sign-in',
