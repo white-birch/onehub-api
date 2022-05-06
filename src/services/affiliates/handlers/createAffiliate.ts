@@ -1,5 +1,5 @@
-import * as validators from '../validators';
 import { Affiliate, AffiliateAddress } from '../../../db';
+import * as validators from '../validators';
 
 import type { AffiliateAttributes } from '../../../db';
 

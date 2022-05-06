@@ -18,6 +18,12 @@ class AffiliateAddress extends _Model<AffiliateAddressAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
   state!: string;
 
+  @Column({ type: DataType.STRING, allowNull: false })
+  zipCode!: string;
+
+  @Column({ type: DataType.STRING, allowNull: false, defaultValue: 'US' })
+  country!: string;
+
   @ForeignKey(() => Affiliate)
   affiliateId!: string;
 
