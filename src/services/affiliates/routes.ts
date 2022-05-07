@@ -3,11 +3,20 @@ import httpContext from 'express-http-context';
 import { authMiddleware, nextOnError } from '../../middleware';
 import { AffiliateRole } from '../../types';
 import { isAffiliateAdmin, isOrganizationAdmin } from '../../utils/auth';
-import { addUserToAffiliate, createAffiliate, deleteAffiliate, getAffiliates, updateAffiliate } from './handlers';
+import { addUserToAffiliate, createAffiliate, deleteAffiliate, getAffiliate, getAffiliates, updateAffiliate } from './handlers';
 
 import type { TokenContext } from '../../types';
 
 const router = Router();
+
+router.get(
+  '/affiliates/:affiliateId',
+  authMiddleware(),
+  nextOnError(async (req, res) => {
+    const affiliate = await getAffiliate(req.params.affiliateId);
+    res.status(200).json(affiliate);
+  })
+);
 
 router.get(
   '/affiliates',
