@@ -1,10 +1,9 @@
 import { Router } from 'express';
 import httpContext from 'express-http-context';
-import { Organization } from '../../db';
 import { authMiddleware, nextOnError } from '../../middleware';
 import { AffiliateRole } from '../../types';
-import { isOrganizationAdmin } from '../../utils/auth';
-import { addUserToAffiliate, createAffiliate, deleteAffiliate, getAffiliate, getAffiliates } from './handlers';
+import { isAffiliateAdmin, isOrganizationAdmin } from '../../utils/auth';
+import { addUserToAffiliate, createAffiliate, deleteAffiliate, getAffiliates, updateAffiliate } from './handlers';
 
 import type { TokenContext } from '../../types';
 
@@ -34,9 +33,18 @@ router.post(
   })
 );
 
+router.put(
+  '/affiliates/:affiliateId',
+  authMiddleware([isAffiliateAdmin(async (req) => req.params.affiliateId)]),
+  nextOnError(async (req, res) => {
+    const affiliate = await updateAffiliate(req.params.affiliateId, req.body);
+    res.status(200).json(affiliate);
+  })
+);
+
 router.delete(
   '/affiliates/:affiliateId',
-  authMiddleware([isOrganizationAdmin(async (req) => (await getAffiliate(req.params.affiliateId, { include: Organization })).organization.id)]),
+  authMiddleware([isAffiliateAdmin(async (req) => req.params.affiliateId)]),
   nextOnError(async (req, res) => {
     await deleteAffiliate(req.params.affiliateId);
     res.sendStatus(200);
