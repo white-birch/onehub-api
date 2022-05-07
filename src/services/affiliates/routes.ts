@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import httpContext from 'express-http-context';
+import { Organization } from '../../db';
 import { authMiddleware, nextOnError } from '../../middleware';
 import { AffiliateRole } from '../../types';
 import { isOrganizationAdmin } from '../../utils/auth';
-import { addUserToAffiliate, createAffiliate, getAffiliates } from './handlers';
+import { addUserToAffiliate, createAffiliate, deleteAffiliate, getAffiliate, getAffiliates } from './handlers';
 
 import type { TokenContext } from '../../types';
 
@@ -30,6 +31,15 @@ router.post(
     await addUserToAffiliate(affiliate, user, AffiliateRole.Admin);
 
     res.status(201).json(affiliate);
+  })
+);
+
+router.delete(
+  '/affiliates/:affiliateId',
+  authMiddleware([isOrganizationAdmin(async (req) => (await getAffiliate(req.params.affiliateId, { include: Organization })).organization.id)]),
+  nextOnError(async (req, res) => {
+    await deleteAffiliate(req.params.affiliateId);
+    res.sendStatus(200);
   })
 );
 
