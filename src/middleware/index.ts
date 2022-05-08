@@ -1,3 +1,4 @@
+export { default as apiKeyMiddleware } from './apiKeyMiddleware';
 export { default as authMiddleware } from './authMiddleware';
 export { default as errorHandlingMiddleware } from './errorHandlingMiddleware';
 export { default as nextOnError } from './nextOnError';

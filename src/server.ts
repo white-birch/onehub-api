@@ -1,7 +1,15 @@
 import cookieParser from 'cookie-parser';
 import express, { Router } from 'express';
 import httpContext from 'express-http-context';
-import { errorHandlingMiddleware, notFoundMiddleware /*, openApiMiddleware*/, requestLoggerMiddleware, tokenMiddleware, traceMiddleware } from './middleware';
+import {
+  apiKeyMiddleware,
+  errorHandlingMiddleware,
+  notFoundMiddleware,
+  // openApiMiddleware,
+  requestLoggerMiddleware,
+  tokenMiddleware,
+  traceMiddleware,
+} from './middleware';
 import * as services from './services';
 import logger from './utils/logger';
 
@@ -16,6 +24,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(httpContext.middleware);
 app.use(traceMiddleware);
+app.use(apiKeyMiddleware);
 app.use(tokenMiddleware);
 app.use(requestLoggerMiddleware);
 // app.use(openApiMiddleware()); // TODO: Re-enable

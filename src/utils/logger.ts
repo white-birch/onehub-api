@@ -9,6 +9,7 @@ if (!Object.keys(winston.config.npm.levels).includes(level)) {
 
 const normalize = winston.format(({ error, ...rest }) => ({
   ...rest,
+  apiKey: httpContext.get('apiKey'),
   traceId: httpContext.get('traceId'),
   userId: httpContext.get('token')?.user?.id,
   ...(error instanceof Error ? { error: { message: error.message, stack: error.stack } } : { error }),
