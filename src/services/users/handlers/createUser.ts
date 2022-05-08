@@ -1,6 +1,6 @@
 import { User } from '../../../db';
 import { BadRequestError } from '../../../errors';
-import { hash } from '../../../utils/crypto';
+import { hash } from '../../../utils/hash';
 import ErrorCode from '../../../utils/errorCodes';
 import logger from '../../../utils/logger';
 import * as validators from '../validators';

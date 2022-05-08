@@ -1,10 +1,9 @@
 import httpContext from 'express-http-context';
 import { AffiliateUserRole, OrganizationUserRole } from '../db';
 import { getUser } from '../services/users/handlers';
-import { verify } from '../utils/crypto';
+import { verifyToken } from '../utils/token';
 
 import type { NextFunction, Request, Response } from 'express';
-import type { JwtPayload } from 'jsonwebtoken';
 
 const getToken = (req: Request): string | undefined => {
   const bearerToken = req.headers.authorization?.split(' ')[1];
@@ -17,7 +16,7 @@ const tokenMiddleware = async (req: Request, res: Response, next: NextFunction) 
     const token = getToken(req);
 
     if (token) {
-      const payload = (await verify(token)) as JwtPayload;
+      const payload = await verifyToken(token);
       const user = await getUser(payload.userId, { include: [AffiliateUserRole, OrganizationUserRole] });
       httpContext.set('token', { value: token, payload, user });
     }

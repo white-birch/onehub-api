@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 if (!process.env.JWT_PRIVATE_KEY) {
@@ -9,16 +8,7 @@ if (!process.env.JWT_PUBLIC_KEY) {
   throw new Error('Missing environment variable: JWT_PUBLIC_KEY');
 }
 
-if (!process.env.SALT_ROUNDS) {
-  throw new Error('Missing environment variable: SALT_ROUNDS');
-}
-
 const { JWT_PRIVATE_KEY, JWT_PUBLIC_KEY } = process.env;
-const SALT_ROUNDS = Number(process.env.SALT_ROUNDS);
-
-export const compare = (value: string, hash: string) => bcrypt.compare(value, hash);
-
-export const hash = (value: string) => bcrypt.hash(value, SALT_ROUNDS);
 
 export const sign = (payload: Record<string, unknown>): Promise<string> =>
   new Promise((resolve, reject) =>

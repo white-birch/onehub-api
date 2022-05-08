@@ -1,5 +1,5 @@
 import { createUser } from '../../users/handlers';
-import signToken from './signToken';
+import { signToken } from '../../../utils/token';
 
 const signUp = async (email: string, password: string) => {
   const user = await createUser({ email, password });
