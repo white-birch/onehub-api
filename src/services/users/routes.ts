@@ -48,8 +48,9 @@ router.post(
 router.post(
   '/auth/sign-up',
   nextOnError(async (req, res) => {
-    const { email, password } = req.body;
-    const { token, user } = await signUp(email, password);
+    const { email, password, options } = req.body;
+    const { token, user } = await signUp(email, password, options);
+
     res.status(201).cookie('token', token, COOKIE_OPTIONS).json({ token, user });
   })
 );
