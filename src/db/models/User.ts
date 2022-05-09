@@ -1,6 +1,6 @@
 import { BelongsToMany, Column, DataType, HasMany, Table } from 'sequelize-typescript';
-import { AffiliateRole, InviteType, OrganizationRole } from '../../types';
-import { filterAsync, someAsync } from '../../utils/arrayAsync';
+import { InviteType, OrganizationRole } from '../../types';
+import { filterAsync, everyAsync } from '../../utils/arrayAsync';
 import { Affiliate, AffiliateUser, AffiliateUserRole, Membership, Organization, OrganizationUser, OrganizationUserRole } from '.';
 import _Model from './_Model';
 
@@ -43,16 +43,6 @@ class User extends _Model<UserAttributes> {
   }
 
   async isAffiliateAdmin(affiliateId: string) {
-    const affiliateUserRoles = await this.$get('affiliateUserRoles');
-
-    if (affiliateUserRoles) {
-      const isAdminOfAffiliate = affiliateUserRoles
-        .filter((affiliateUserRole) => affiliateUserRole.affiliateId === affiliateId)
-        .some((affiliateUserRole) => affiliateUserRole.role === AffiliateRole.Admin);
-
-      if (isAdminOfAffiliate) return true;
-    }
-
     const affiliate = await Affiliate.findByPk(affiliateId, { include: [Organization] });
 
     if (!affiliate) {
@@ -90,7 +80,7 @@ class User extends _Model<UserAttributes> {
 
     const adminAffiliates = await filterAsync<Affiliate>(affiliates, (affiliate) => this.isAffiliateAdmin(affiliate.id));
 
-    return someAsync<Affiliate>(adminAffiliates, async (affiliate) => {
+    return everyAsync<Affiliate>(adminAffiliates, async (affiliate) => {
       const affiliateTracks = await affiliate.$get('tracks');
       return affiliateTracks.some((affiliateTrack) => affiliateTrack.id === trackId);
     });
