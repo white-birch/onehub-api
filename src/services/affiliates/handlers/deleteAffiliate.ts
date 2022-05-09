@@ -1,7 +1,9 @@
 import getAffiliate from './getAffiliate';
 
-const deleteAffiliate = async (affiliateId: string) => {
-  const affiliate = await getAffiliate(affiliateId);
+import type { User } from '../../../db';
+
+const deleteAffiliate = async (affiliateId: string, user: User) => {
+  const affiliate = await getAffiliate(affiliateId, user);
   await affiliate.destroy();
 };
 

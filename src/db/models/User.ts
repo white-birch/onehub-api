@@ -84,6 +84,13 @@ class User extends _Model<UserAttributes> {
     if (type === InviteType.Organization) return this.isOrganizationAdmin(id);
     throw new Error(`Invalid type (${type}) provided when checking if user is admin`);
   }
+
+  async isAffiliateUser(affiliateId: string) {
+    if (await this.isAffiliateAdmin(affiliateId)) return true;
+
+    const affiliateUserRoles = await this.$get('affiliateUserRoles');
+    return affiliateUserRoles ? affiliateUserRoles.some((affiliateUserRole) => affiliateUserRole.affiliateId === affiliateId) : false;
+  }
 }
 
 export default User;

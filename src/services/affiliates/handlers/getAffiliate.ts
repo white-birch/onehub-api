@@ -1,18 +1,23 @@
 import { Affiliate } from '../../../db';
-import { NotFoundError } from '../../../errors';
+import { ForbiddenError, NotFoundError } from '../../../errors';
 import logger from '../../../utils/logger';
 import * as validators from '../../../utils/validators';
 
-type Options = Parameters<typeof Affiliate.findByPk>[1];
+import type { User } from '../../../db';
 
-const getAffiliate = async (affiliateId: string, options?: Options) => {
+const getAffiliate = async (affiliateId: string, user: User) => {
   await validators.validate(validators.id, { id: affiliateId });
 
-  const affiliate = await Affiliate.findByPk(affiliateId, options);
+  const affiliate = await Affiliate.findByPk(affiliateId);
 
   if (!affiliate) {
     logger.warn({ message: 'Affiliate not found', affiliateId });
     throw new NotFoundError();
+  }
+
+  if (!user.isAffiliateUser(affiliateId)) {
+    logger.warn({ message: 'User not authorized to get affiliate', affiliateId });
+    throw new ForbiddenError();
   }
 
   return affiliate;

@@ -1,4 +1,5 @@
 import { Affiliate } from '../../../db';
+import filterAsync from '../../../utils/filterAsync';
 import * as validators from '../../../utils/validators';
 import { getOrganization } from '../../organizations/handlers';
 
@@ -9,7 +10,7 @@ const getAffiliates = async (organizationId: string, user: User) => {
 
   const { affiliates } = await getOrganization(organizationId, { include: [Affiliate] });
 
-  return affiliates.filter((affiliate) => user.affiliateUserRoles.some(({ affiliateId }) => affiliateId === affiliate.id));
+  return filterAsync<Affiliate>(affiliates, (affiliate) => user.isAffiliateUser(affiliate.id));
 };
 
 export default getAffiliates;
