@@ -1,5 +1,5 @@
 import { Affiliate } from '../../../db';
-import filterAsync from '../../../utils/filterAsync';
+import { filterAsync } from '../../../utils/arrayAsync';
 import * as validators from '../../../utils/validators';
 import { getOrganization } from '../../organizations/handlers';
 

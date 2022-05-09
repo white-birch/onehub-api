@@ -15,7 +15,8 @@ const getAffiliate = async (affiliateId: string, user: User) => {
     throw new NotFoundError();
   }
 
-  if (!user.isAffiliateUser(affiliateId)) {
+  const isAuthorized = user.isAffiliateUser(affiliateId);
+  if (!isAuthorized) {
     logger.warn({ message: 'User not authorized to get affiliate', affiliateId });
     throw new ForbiddenError();
   }

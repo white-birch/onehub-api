@@ -1,11 +1,10 @@
 import { BelongsToMany, Column, DataType, HasMany, Table } from 'sequelize-typescript';
 import { AffiliateRole, InviteType, OrganizationRole } from '../../types';
-import { Affiliate, AffiliateUser, AffiliateUserRole, OrganizationUser, OrganizationUserRole } from '.';
+import { filterAsync, someAsync } from '../../utils/arrayAsync';
+import { Affiliate, AffiliateUser, AffiliateUserRole, Membership, Organization, OrganizationUser, OrganizationUserRole } from '.';
 import _Model from './_Model';
 
 import type { UserAttributes } from './User.types';
-import Organization from './Organization';
-import Membership from './Membership';
 
 @Table
 class User extends _Model<UserAttributes> {
@@ -79,10 +78,22 @@ class User extends _Model<UserAttributes> {
       .some((organizationUserRole) => organizationUserRole.role === OrganizationRole.Admin);
   }
 
-  async isAdmin(type: InviteType, id: string) {
+  async isAdminForInvite(type: InviteType, id: string) {
     if (type === InviteType.Affiliate) return this.isAffiliateAdmin(id);
     if (type === InviteType.Organization) return this.isOrganizationAdmin(id);
-    throw new Error(`Invalid type (${type}) provided when checking if user is admin`);
+    throw new Error(`Invalid invite type (${type}) provided when checking if user is admin`);
+  }
+
+  async isTrackAdmin(trackId: string) {
+    const affiliates = await this.$get('affiliates');
+    if (!affiliates) return false;
+
+    const adminAffiliates = await filterAsync<Affiliate>(affiliates, (affiliate) => this.isAffiliateAdmin(affiliate.id));
+
+    return someAsync<Affiliate>(adminAffiliates, async (affiliate) => {
+      const affiliateTracks = await affiliate.$get('tracks');
+      return affiliateTracks.some((affiliateTrack) => affiliateTrack.id === trackId);
+    });
   }
 
   async isAffiliateUser(affiliateId: string) {

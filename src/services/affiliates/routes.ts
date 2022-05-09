@@ -45,7 +45,7 @@ router.post(
 
 router.put(
   '/affiliates/:affiliateId',
-  authMiddleware([isAffiliateAdmin(async (req) => req.params.affiliateId)]),
+  authMiddleware([isAffiliateAdmin((req) => req.params.affiliateId)]),
   nextOnError(async (req, res) => {
     const { user } = httpContext.get('token') as TokenContext;
     const affiliate = await updateAffiliate(req.params.affiliateId, req.body, user);
@@ -55,7 +55,7 @@ router.put(
 
 router.delete(
   '/affiliates/:affiliateId',
-  authMiddleware([isAffiliateAdmin(async (req) => req.params.affiliateId)]),
+  authMiddleware([isAffiliateAdmin((req) => req.params.affiliateId)]),
   nextOnError(async (req, res) => {
     const { user } = httpContext.get('token') as TokenContext;
     await deleteAffiliate(req.params.affiliateId, user);

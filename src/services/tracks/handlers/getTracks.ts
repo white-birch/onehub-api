@@ -1,15 +1,18 @@
-import { Affiliate } from '../../../db';
-import * as validators from '../../../utils/validators';
-import { getOrganization } from '../../organizations/handlers';
+import { Track } from '../../../db';
+import { getAffiliates } from '../../affiliates/handlers';
 
 import type { User } from 'db';
 
 const getTracks = async (organizationId: string, user: User) => {
-  await validators.validate(validators.organizationId, { organizationId });
+  const affiliates = await getAffiliates(organizationId, user);
 
-  const { affiliates } = await getOrganization(organizationId, { include: [Affiliate] });
-
-  return affiliates.filter((affiliate) => user.affiliateUserRoles.some(({ affiliateId }) => affiliateId === affiliate.id));
+  return Array.from(
+    await affiliates.reduce(async (acc, affiliate) => {
+      const tracks = await acc;
+      const affiliateTracks = await affiliate.$get('tracks');
+      return new Set([...tracks, ...affiliateTracks]);
+    }, Promise.resolve(new Set<Track>()))
+  );
 };
 
 export default getTracks;
