@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import httpContext from 'express-http-context';
 import { authMiddleware, nextOnError } from '../../middleware';
+import { mapAsync } from '../../utils/arrayAsync';
 import { isAffiliateAdmin, isTrackAdmin } from '../../utils/auth';
-import logger from '../../utils/logger';
 import { getAffiliate } from '../affiliates/handlers';
 import { createTrack, deleteTrack, getTrack, getTracks, updateTrack } from './handlers';
 
@@ -33,18 +33,15 @@ router.get(
 
 router.post(
   '/tracks',
-  authMiddleware([isAffiliateAdmin((req) => req.body.affiliateId)]),
+  authMiddleware([isAffiliateAdmin((req) => req.query.affiliateIds as string[])]),
   nextOnError(async (req, res) => {
+    const { user } = httpContext.get('token') as TokenContext;
+    const affiliates = await mapAsync(req.query.affiliateIds as string[], (affiliateId) => getAffiliate(affiliateId, user));
+
     const track = await createTrack(req.body);
 
-    if (req.query.affiliateId) {
-      try {
-        const { user } = httpContext.get('token') as TokenContext;
-        const affiliate = await getAffiliate(req.query.affiliateId as string, user);
-        await track.$add('affiliates', affiliate);
-      } catch (error) {
-        logger.error({ message: 'Failed to add track to affiliate', affiliateId: req.query.affiliateId, trackId: track.id, error });
-      }
+    for (const affiliate of affiliates) {
+      await track.$add('affiliates', affiliate);
     }
 
     res.status(201).json(track);
