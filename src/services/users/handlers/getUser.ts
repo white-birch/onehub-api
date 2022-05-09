@@ -1,7 +1,7 @@
 import { User } from '../../../db';
 import { NotFoundError } from '../../../errors';
 import logger from '../../../utils/logger';
-import * as validators from '../validators';
+import * as validators from '../../../utils/validators';
 
 type Options = Parameters<typeof User.findByPk>[1];
 

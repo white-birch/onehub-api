@@ -3,7 +3,7 @@ import { BadRequestError } from '../../../errors';
 import { hash } from '../../../utils/hash';
 import ErrorCode from '../../../utils/errorCodes';
 import logger from '../../../utils/logger';
-import * as validators from '../validators';
+import * as validators from '../../../utils/validators';
 
 import type { UserAttributes } from 'db';
 

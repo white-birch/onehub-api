@@ -1,5 +1,5 @@
-import * as validators from '../validators';
 import { Track } from '../../../db';
+import * as validators from '../../../utils/validators';
 
 import type { TrackAttributes } from '../../../db';
 

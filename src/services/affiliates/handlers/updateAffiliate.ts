@@ -1,4 +1,4 @@
-import * as validators from '../validators';
+import * as validators from '../../../utils/validators';
 import getAffiliate from './getAffiliate';
 
 import type { AffiliateAttributes } from 'db';

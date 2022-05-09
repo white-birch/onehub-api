@@ -2,8 +2,8 @@ import { User } from '../../../db';
 import { UnauthorizedError } from '../../../errors';
 import { compare } from '../../../utils/hash';
 import logger from '../../../utils/logger';
-import * as validators from '../validators';
 import { signToken } from '../../../utils/token';
+import * as validators from '../../../utils/validators';
 
 const signIn = async (email: string, password: string, organizationId?: string) => {
   await validators.validate([validators.email, validators.password], { email, password });

@@ -1,7 +1,7 @@
 import { Organization } from '../../../db';
 import { NotFoundError } from '../../../errors';
 import logger from '../../../utils/logger';
-import * as validators from '../validators';
+import * as validators from '../../../utils/validators';
 
 type Options = Parameters<typeof Organization.findByPk>[1];
 

@@ -1,5 +1,5 @@
-import * as validators from '../validators';
 import { Plan } from '../../../db';
+import * as validators from '../../../utils/validators';
 
 import type { PlanAttributes } from '../../../db';
 
