@@ -1,6 +1,5 @@
 import { BelongsToMany, Column, DataType, HasMany, Table } from 'sequelize-typescript';
-import { InviteType, OrganizationRole } from '../../types';
-import { filterAsync, everyAsync } from '../../utils/arrayAsync';
+import { OrganizationRole } from '../../types';
 import { Affiliate, AffiliateUser, AffiliateUserRole, Membership, Organization, OrganizationUser, OrganizationUserRole } from '.';
 import _Model from './_Model';
 
@@ -42,20 +41,6 @@ class User extends _Model<UserAttributes> {
     return this.getDataValue('password');
   }
 
-  async isAffiliateAdmin(affiliateId: string) {
-    const affiliate = await Affiliate.findByPk(affiliateId, { include: [Organization] });
-
-    if (!affiliate) {
-      throw new Error(`Affiliate with id ${affiliateId} not found`);
-    }
-
-    if (!affiliate.organization) {
-      throw new Error(`Affiliate with id ${affiliateId} has no organization`);
-    }
-
-    return this.isOrganizationAdmin(affiliate.organization.id);
-  }
-
   async isOrganizationAdmin(organizationId: string) {
     if (this.isSuperUser) return true;
 
@@ -68,29 +53,17 @@ class User extends _Model<UserAttributes> {
       .some((organizationUserRole) => organizationUserRole.role === OrganizationRole.Admin);
   }
 
-  async isAdminForInvite(type: InviteType, id: string) {
-    if (type === InviteType.Affiliate) return this.isAffiliateAdmin(id);
-    if (type === InviteType.Organization) return this.isOrganizationAdmin(id);
-    throw new Error(`Invalid invite type (${type}) provided when checking if user is admin`);
-  }
-
-  async isTrackAdmin(trackId: string) {
-    const affiliates = await this.$get('affiliates');
-    if (!affiliates) return false;
-
-    const adminAffiliates = await filterAsync<Affiliate>(affiliates, (affiliate) => this.isAffiliateAdmin(affiliate.id));
-
-    return everyAsync<Affiliate>(adminAffiliates, async (affiliate) => {
-      const affiliateTracks = await affiliate.$get('tracks');
-      return affiliateTracks.some((affiliateTrack) => affiliateTrack.id === trackId);
-    });
-  }
-
   async isAffiliateUser(affiliateId: string) {
-    if (await this.isAffiliateAdmin(affiliateId)) return true;
-
     const affiliateUserRoles = await this.$get('affiliateUserRoles');
-    return affiliateUserRoles ? affiliateUserRoles.some((affiliateUserRole) => affiliateUserRole.affiliateId === affiliateId) : false;
+    if (!affiliateUserRoles) return false;
+
+    const hasAffiliateUserRole = affiliateUserRoles.some((affiliateUserRole) => affiliateUserRole.affiliateId === affiliateId);
+    if (hasAffiliateUserRole) return true;
+
+    const affiliate = await Affiliate.findByPk(affiliateId);
+    if (!affiliate) return false;
+
+    return this.isOrganizationAdmin(affiliate.organizationId);
   }
 }
 

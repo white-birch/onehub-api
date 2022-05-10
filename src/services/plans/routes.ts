@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import { authMiddleware, nextOnError } from '../../middleware';
-import { isAffiliateAdmin } from '../../utils/auth';
+import { isOrganizationAdmin } from '../../utils/auth';
 import { createPlan } from './handlers';
 
 const router = Router();
 
 router.post(
   '/plans',
-  authMiddleware([isAffiliateAdmin((req) => req.body.affiliateId)]),
+  authMiddleware([isOrganizationAdmin]),
   nextOnError(async (req, res) => {
     const plan = await createPlan(req.body);
     res.status(201).json(plan);

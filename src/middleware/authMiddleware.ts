@@ -5,10 +5,9 @@ import nextOnError from './nextOnError';
 
 import type { Request, Response, NextFunction } from 'express';
 import type { TokenContext } from 'types';
+import type { AuthAddOn } from 'utils/auth';
 
 const DISABLE_AUTH = process.env.DISABLE_AUTH === 'true';
-
-type AuthAddOn = (req: Request, tokenContext: TokenContext) => void | Promise<void>;
 
 const authMiddleware = (addOns?: AuthAddOn[]) =>
   nextOnError(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -31,7 +30,7 @@ const authMiddleware = (addOns?: AuthAddOn[]) =>
 
       if (addOns && !user.isSuperUser) {
         for (const addOn of addOns) {
-          await addOn(req, tokenContext);
+          await addOn(tokenContext);
         }
       }
 

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import httpContext from 'express-http-context';
 import { authMiddleware, nextOnError } from '../../middleware';
 import { mapAsync } from '../../utils/arrayAsync';
-import { isAffiliateAdmin, isTrackAdmin } from '../../utils/auth';
+import { isOrganizationAdmin } from '../../utils/auth';
 import { getAffiliate } from '../affiliates/handlers';
 import { createTrack, deleteTrack, getTrack, getTracks, updateTrack } from './handlers';
 
@@ -33,7 +33,7 @@ router.get(
 
 router.post(
   '/tracks',
-  authMiddleware([isAffiliateAdmin((req) => req.query.affiliateIds as string[])]),
+  authMiddleware([isOrganizationAdmin]),
   nextOnError(async (req, res) => {
     const { user } = httpContext.get('token') as TokenContext;
     const affiliates = await mapAsync(req.query.affiliateIds as string[], (affiliateId) => getAffiliate(affiliateId, user));
@@ -50,7 +50,7 @@ router.post(
 
 router.put(
   '/tracks/:trackId',
-  authMiddleware([isTrackAdmin((req) => req.params.trackId)]),
+  authMiddleware([isOrganizationAdmin]),
   nextOnError(async (req, res) => {
     const { user } = httpContext.get('token') as TokenContext;
     const track = await updateTrack(req.params.trackId, req.body, user);
@@ -60,7 +60,7 @@ router.put(
 
 router.delete(
   '/tracks/:trackId',
-  authMiddleware([isTrackAdmin((req) => req.params.trackId)]),
+  authMiddleware([isOrganizationAdmin]),
   nextOnError(async (req, res) => {
     const { user } = httpContext.get('token') as TokenContext;
     await deleteTrack(req.params.trackId, user);
