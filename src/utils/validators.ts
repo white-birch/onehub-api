@@ -30,7 +30,7 @@ export const affiliateId = {
     .typeError(ErrorCode.AffiliateIdInvalid)
     .uuid(ErrorCode.AffiliateIdInvalid)
     .test({
-      name: 'is-valid-affiliate-id',
+      name: 'valid-affiliate-id',
       message: ErrorCode.AffiliateIdInvalid,
       test: async (value) => !!(await Affiliate.findByPk(value)),
     })
@@ -50,7 +50,7 @@ export const organizationId = {
     .typeError(ErrorCode.OrganizationIdInvalid)
     .uuid(ErrorCode.OrganizationIdInvalid)
     .test({
-      name: 'is-valid-organization-id',
+      name: 'valid-organization-id',
       message: ErrorCode.OrganizationIdInvalid,
       test: async (value) => !!(await Organization.findByPk(value)),
     })
@@ -62,7 +62,7 @@ export const planId = {
     .typeError(ErrorCode.PlanIdInvalid)
     .uuid(ErrorCode.PlanIdInvalid)
     .test({
-      name: 'is-valid-plan-id',
+      name: 'valid-plan-id',
       message: ErrorCode.PlanIdInvalid,
       test: async (value) => !!(await Plan.findByPk(value)),
     })
@@ -74,31 +74,31 @@ export const userId = {
     .typeError(ErrorCode.UserIdInvalid)
     .uuid(ErrorCode.UserIdInvalid)
     .test({
-      name: 'is-valid-user-id',
+      name: 'valid-user-id',
       message: ErrorCode.UserIdInvalid,
       test: async (value) => !!(await User.findByPk(value)),
     })
     .required(ErrorCode.UserIdRequired),
 };
 
-export const inviteCode = {
-  code: string()
-    .typeError(ErrorCode.InviteCodeInvalid)
-    .test({
-      name: 'is-valid-invite-code-id',
-      message: ErrorCode.InviteCodeInUse,
-      test: async (value) => !(await Invite.findByPk(value)),
-    })
-    .required(ErrorCode.InviteCodeRequired),
-};
-
 export const inviteCodeExists = {
   code: string()
     .typeError(ErrorCode.InviteCodeInvalid)
     .test({
-      name: 'does-invite-code-exist',
+      name: 'invite-code-in-use',
+      message: ErrorCode.InviteCodeInUse,
+      test: async (value) => !(await Invite.findByPk(value?.toUpperCase())),
+    })
+    .required(ErrorCode.InviteCodeRequired),
+};
+
+export const inviteCode = {
+  code: string()
+    .typeError(ErrorCode.InviteCodeInvalid)
+    .test({
+      name: 'valid-invite-code',
       message: ErrorCode.InviteCodeInvalid,
-      test: async (value) => !!(await Invite.findByPk(value)),
+      test: async (value) => !!(await Invite.findByPk(value?.toUpperCase())),
     })
     .required(ErrorCode.InviteCodeRequired),
 };
@@ -107,7 +107,7 @@ export const inviteType = {
   type: string()
     .typeError(ErrorCode.InviteTypeInvalid)
     .test({
-      name: 'is-valid-invite-type',
+      name: 'valid-invite-type',
       message: ErrorCode.InviteTypeInvalid,
       test: (value) => Object.values(InviteType).includes(value as InviteType),
     })
@@ -119,7 +119,7 @@ export const inviteId = {
     .typeError(ErrorCode.InviteIdInvalid)
     .uuid(ErrorCode.InviteIdInvalid)
     .test({
-      name: 'is-valid-invite-id',
+      name: 'valid-invite-id',
       message: ErrorCode.InviteIdInvalid,
       test: async function (value) {
         if (this.parent.type === InviteType.Organization) return !!(await Organization.findByPk(value));

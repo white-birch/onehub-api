@@ -2,7 +2,7 @@ import { Router } from 'express';
 import httpContext from 'express-http-context';
 import { authMiddleware, nextOnError } from '../../middleware';
 import { isOrganizationAdmin } from '../../utils/auth';
-import { acceptInvite, createInvite, getInvite } from './handlers';
+import { acceptInvite, createInvite, getInvite, getInvites } from './handlers';
 
 import type { TokenContext } from 'types';
 
@@ -14,6 +14,16 @@ router.post(
   nextOnError(async (req, res) => {
     const invite = await createInvite(req.body);
     res.status(201).json(invite);
+  })
+);
+
+router.get(
+  '/invites',
+  authMiddleware([isOrganizationAdmin]),
+  nextOnError(async (req, res) => {
+    const { payload } = httpContext.get('token') as TokenContext;
+    const invites = await getInvites(payload.organizationId);
+    res.status(200).json(invites);
   })
 );
 
