@@ -12,11 +12,12 @@ if (!TOKEN_SECRET) {
 
 const cryptr = new Cryptr(TOKEN_SECRET);
 
-export const signToken = async (user: User, organizationId?: string) =>
+export const signToken = async (user: User, organizationId: string) =>
   cryptr.encrypt(
     await sign({
       userId: user.id,
-      isOrganizationAdmin: organizationId ? await user.isOrganizationAdmin(organizationId) : false,
+      organizationId,
+      isOrganizationAdmin: await user.isOrganizationAdmin(organizationId),
     })
   );
 

@@ -6,7 +6,7 @@ import { signToken } from '../../../utils/token';
 import * as validators from '../../../utils/validators';
 
 const signIn = async (email: string, password: string, organizationId?: string) => {
-  await validators.validate([validators.email, validators.password], { email, password });
+  await validators.validate([validators.email, validators.password, validators.organizationId], { email, password, organizationId });
 
   const [user] = await User.findAll({ where: { email } });
 
@@ -22,7 +22,7 @@ const signIn = async (email: string, password: string, organizationId?: string) 
     throw new UnauthorizedError();
   }
 
-  const token = await signToken(user, organizationId);
+  const token = await signToken(user, organizationId as string);
   return { token, user };
 };
 
