@@ -22,9 +22,8 @@ router.get(
   '/affiliates',
   authMiddleware(),
   nextOnError(async (req, res) => {
-    const organizationId = req.query.organizationId as string;
-    const { user } = httpContext.get('token') as TokenContext;
-    const affiliates = await getAffiliates(organizationId, user);
+    const { payload, user } = httpContext.get('token') as TokenContext;
+    const affiliates = await getAffiliates(payload.organizationId, user);
     res.status(200).json(affiliates);
   })
 );
@@ -33,8 +32,8 @@ router.post(
   '/affiliates',
   authMiddleware([isOrganizationAdmin]),
   nextOnError(async (req, res) => {
-    const affiliate = await createAffiliate(req.body);
-
+    const { payload } = httpContext.get('token') as TokenContext;
+    const affiliate = await createAffiliate({ ...req.body, organizationId: payload.organizationId });
     res.status(201).json(affiliate);
   })
 );

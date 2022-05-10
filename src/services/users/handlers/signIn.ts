@@ -5,7 +5,7 @@ import logger from '../../../utils/logger';
 import { signToken } from '../../../utils/token';
 import * as validators from '../../../utils/validators';
 
-const signIn = async (email: string, password: string, organizationId?: string) => {
+const signIn = async (email: string, password: string, organizationId: string) => {
   await validators.validate([validators.email, validators.password, validators.organizationId], { email, password, organizationId });
 
   const [user] = await User.findAll({ where: { email } });
@@ -21,6 +21,8 @@ const signIn = async (email: string, password: string, organizationId?: string) 
     logger.warn({ message: 'Incorrect Password', email });
     throw new UnauthorizedError();
   }
+
+  // TODO: Need to make sure the user is a member of the organization
 
   const token = await signToken(user, organizationId as string);
   return { token, user };

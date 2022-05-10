@@ -32,7 +32,7 @@ router.post(
   '/auth/sign-in',
   nextOnError(async (req, res) => {
     const { email, password } = req.body;
-    const organizationId = req.query.organizationId as string | undefined;
+    const organizationId = req.query.organizationId as string;
     const { token, user } = await signIn(email, password, organizationId);
     res.status(200).cookie('token', token, COOKIE_OPTIONS).json({ token, user });
   })
