@@ -4,5 +4,5 @@ export interface TrackAttributes {
 }
 
 export interface TrackInput extends TrackAttributes {
-  affiliateIds?: string[];
+  affiliateIds: string[];
 }

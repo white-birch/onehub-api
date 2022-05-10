@@ -10,7 +10,7 @@ const createTrack = async ({ id, affiliateIds, ...data }: TrackInput, user: User
 
   const track = await new Track(data).save();
 
-  const affiliates = await mapAsync(affiliateIds as string[], (affiliateId) => getAffiliate(affiliateId, user));
+  const affiliates = await mapAsync(affiliateIds, (affiliateId) => getAffiliate(affiliateId, user));
   for (const affiliate of affiliates) {
     await track.$add('affiliates', affiliate);
   }
