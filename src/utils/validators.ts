@@ -1,4 +1,4 @@
-import { string } from 'yup';
+import { array, string } from 'yup';
 import { Affiliate, Invite, Organization, Plan, User } from '../db';
 import { InviteType } from '../types';
 import ErrorCode from './errorCodes';
@@ -34,6 +34,14 @@ export const affiliateId = {
       message: ErrorCode.AffiliateIdInvalid,
       test: async (value) => !!(await Affiliate.findByPk(value)),
     })
+    .required(ErrorCode.AffiliateIdRequired),
+};
+
+export const affiliateIds = {
+  affiliateIds: array()
+    .typeError(ErrorCode.AffiliateIdInvalid)
+    .min(1, ErrorCode.AffiliateIdInvalid)
+    .of(affiliateId.affiliateId)
     .required(ErrorCode.AffiliateIdRequired),
 };
 

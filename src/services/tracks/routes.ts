@@ -1,9 +1,7 @@
 import { Router } from 'express';
 import httpContext from 'express-http-context';
 import { authMiddleware, nextOnError } from '../../middleware';
-import { mapAsync } from '../../utils/arrayAsync';
 import { isOrganizationAdmin } from '../../utils/auth';
-import { getAffiliate } from '../affiliates/handlers';
 import { createTrack, deleteTrack, getTrack, getTracks, updateTrack } from './handlers';
 
 import type { TokenContext } from '../../types';
@@ -36,14 +34,7 @@ router.post(
   authMiddleware([isOrganizationAdmin]),
   nextOnError(async (req, res) => {
     const { user } = httpContext.get('token') as TokenContext;
-    const affiliates = await mapAsync(req.query.affiliateIds as string[], (affiliateId) => getAffiliate(affiliateId, user));
-
-    const track = await createTrack(req.body);
-
-    for (const affiliate of affiliates) {
-      await track.$add('affiliates', affiliate);
-    }
-
+    const track = await createTrack(req.body, req.query.affiliateIds as string[], user);
     res.status(201).json(track);
   })
 );
