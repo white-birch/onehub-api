@@ -3,19 +3,19 @@ import { mapAsync } from '../../../utils/arrayAsync';
 import * as validators from '../../../utils/validators';
 import { getAffiliate } from '../../affiliates/handlers';
 
-import type { TrackAttributes, User } from '../../../db';
+import type { TrackInput, User } from '../../../db';
 
-const createTrack = async ({ id, ...data }: TrackAttributes, affiliateIds: string[], user: User) => {
+const createTrack = async ({ id, affiliateIds, ...data }: TrackInput, user: User) => {
   await validators.validate([validators.name, validators.affiliateIds], { ...data, affiliateIds });
 
-  const track = new Track(data);
+  const track = await new Track(data).save();
 
-  const affiliates = await mapAsync(affiliateIds, (affiliateId) => getAffiliate(affiliateId, user));
+  const affiliates = await mapAsync(affiliateIds as string[], (affiliateId) => getAffiliate(affiliateId, user));
   for (const affiliate of affiliates) {
     await track.$add('affiliates', affiliate);
   }
 
-  return track.save();
+  return track;
 };
 
 export default createTrack;
