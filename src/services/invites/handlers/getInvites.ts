@@ -15,7 +15,7 @@ const getInvites = async (organizationId: string) => {
     Promise.resolve([] as Invite[])
   );
 
-  return uniqBy([...organizationInvites, ...affiliateInvites], 'id');
+  return uniqBy([...organizationInvites, ...affiliateInvites], 'code');
 };
 
 export default getInvites;
