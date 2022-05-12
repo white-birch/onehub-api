@@ -7,10 +7,7 @@ const createTrack = async ({ id, affiliateIds, ...data }: TrackInput) => {
   await validators.validate([validators.name, validators.affiliateIds], { ...data, affiliateIds });
 
   const track = await new Track(data).save();
-
-  if (affiliateIds) {
-    await track.$set('affiliates', affiliateIds);
-  }
+  await track.$set('affiliates', affiliateIds || null);
 
   return track;
 };

@@ -37,7 +37,7 @@ export const affiliateId = {
 };
 
 export const affiliateIds = {
-  affiliateIds: array().typeError(ErrorCode.AffiliateIdInvalid).of(affiliateId.affiliateId),
+  affiliateIds: array().typeError(ErrorCode.AffiliateIdInvalid).min(1, ErrorCode.AffiliateIdInvalid).of(affiliateId.affiliateId),
 };
 
 export const organizationId = {
@@ -83,7 +83,9 @@ export const inviteCode = {
       name: 'valid-invite-code',
       message: ErrorCode.InviteCodeTaken,
       test: async function (value) {
-        return !(await Invite.findOne({ where: { code: value?.toUpperCase(), organizationId: this.parent.organizationId } }));
+        const invite = await Invite.findOne({ where: { code: value?.toUpperCase(), organizationId: this.parent.organizationId } });
+        const isUpdatingInvite = !!this.parent.id;
+        return isUpdatingInvite ? invite?.id === this.parent.id : !invite;
       },
     })
     .required(ErrorCode.InviteCodeRequired),

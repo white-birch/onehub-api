@@ -1,10 +1,10 @@
 import { ForeignKey, Table } from 'sequelize-typescript';
 import { User } from '.';
 import Organization from './Organization';
-import _Model from './_Model';
+import _Association from './_Association';
 
 @Table({ tableName: 'Organization_User' })
-class OrganizationUser extends _Model {
+class OrganizationUser extends _Association {
   @ForeignKey(() => Organization)
   organizationId!: string;
 

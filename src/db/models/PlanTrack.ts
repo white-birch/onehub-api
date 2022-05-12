@@ -1,9 +1,9 @@
 import { ForeignKey, Table } from 'sequelize-typescript';
 import { Plan, Track } from '.';
-import _Model from './_Model';
+import _Association from './_Association';
 
 @Table({ tableName: 'Plan_Track' })
-class PlanTrack extends _Model {
+class PlanTrack extends _Association {
   @ForeignKey(() => Plan)
   planId!: string;
 

@@ -7,7 +7,7 @@ const updateTrack = async (trackId: string, { id, affiliateIds, ...data }: Track
   await validators.validate([validators.name, validators.affiliateIds], { ...data, affiliateIds });
 
   const track = await (await getTrack(trackId, user)).update(data);
-  await track.$set('affiliates', affiliateIds);
+  await track.$set('affiliates', affiliateIds || null);
 
   return track;
 };
