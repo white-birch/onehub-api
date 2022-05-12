@@ -2,7 +2,7 @@ import { Router } from 'express';
 import httpContext from 'express-http-context';
 import { authMiddleware, nextOnError } from '../../middleware';
 import { isOrganizationAdmin } from '../../utils/auth';
-import { acceptInvite, createInvite, getInvite, getInvites, updateInvite } from './handlers';
+import { acceptInvite, createInvite, deleteInvite, getInvite, getInvites, updateInvite } from './handlers';
 
 import type { TokenContext } from 'types';
 
@@ -54,6 +54,15 @@ router.put(
     const { payload, user } = httpContext.get('token') as TokenContext;
     const invite = await acceptInvite(req.params.code, payload.organizationId, user);
     res.status(200).json(invite);
+  })
+);
+
+router.delete(
+  '/invites/:id',
+  authMiddleware([isOrganizationAdmin]),
+  nextOnError(async (req, res) => {
+    await deleteInvite(req.params.id);
+    res.sendStatus(200);
   })
 );
 
