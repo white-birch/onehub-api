@@ -83,9 +83,12 @@ export const inviteCode = {
       name: 'valid-invite-code',
       message: ErrorCode.InviteCodeTaken,
       test: async function (value) {
-        const invite = await Invite.findOne({ where: { code: value?.toUpperCase(), organizationId: this.parent.organizationId } });
         const isUpdatingInvite = !!this.parent.id;
-        return isUpdatingInvite ? invite?.id === this.parent.id : !invite;
+        const invite = await Invite.findOne({ where: { code: value?.toUpperCase(), organizationId: this.parent.organizationId } });
+
+        if (!invite) return true;
+        if (!isUpdatingInvite) return false;
+        return invite.id === this.parent.id;
       },
     })
     .required(ErrorCode.InviteCodeRequired),
