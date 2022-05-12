@@ -10,11 +10,6 @@ export enum AffiliateRole {
   Member = 'MEMBER',
 }
 
-export enum InviteType {
-  Organization = 'ORGANIZATION',
-  Affiliate = 'AFFILIATE',
-}
-
 export enum OrganizationRole {
   Admin = 'ADMIN',
 }

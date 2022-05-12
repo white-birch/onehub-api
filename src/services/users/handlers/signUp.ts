@@ -1,4 +1,4 @@
-import { acceptInvite, getInvite, getInviteOrganization } from '../../invites/handlers';
+import { acceptInvite, getInvite } from '../../invites/handlers';
 import { createUser } from '../../users/handlers';
 import { signToken } from '../../../utils/token';
 
@@ -13,9 +13,8 @@ const signUp = async (email: string, password: string, options: SignUpOptions) =
   const user = await createUser({ email, password });
 
   await acceptInvite(invite.code, user);
-  const organizationId = (await getInviteOrganization(invite)).id;
 
-  const token = await signToken(user, organizationId);
+  const token = await signToken(user, invite.organizationId);
   return { token, user };
 };
 

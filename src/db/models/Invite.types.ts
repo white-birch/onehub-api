@@ -1,7 +1,8 @@
-import { InviteType } from 'types';
-
 export interface InviteAttributes {
   code: string;
-  type: InviteType;
-  id: string;
+  organizationId: string;
+}
+
+export interface InviteInput extends InviteAttributes {
+  affiliateIds: string[];
 }

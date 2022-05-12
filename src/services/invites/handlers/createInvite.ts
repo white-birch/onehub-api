@@ -1,12 +1,15 @@
-import { Invite } from '../../../db';
+import { Invite, InviteInput } from '../../../db';
 import * as validators from '../../../utils/validators';
 
-import type { InviteAttributes } from '../../../db';
+const createInvite = async ({ affiliateIds, ...data }: InviteInput) => {
+  await validators.validate([validators.inviteCode, validators.organizationId, validators.affiliateIds], data);
+  const invite = await new Invite({ ...data, code: data.code.toUpperCase() }).save();
 
-const createInvite = async (data: InviteAttributes) => {
-  await validators.validate([validators.inviteCodeExists, validators.inviteId, validators.inviteType], data);
-  const invite = new Invite({ ...data, code: data.code.toUpperCase() });
-  return invite.save();
+  if (affiliateIds) {
+    await invite.$set('affiliates', affiliateIds);
+  }
+
+  return invite;
 };
 
 export default createInvite;

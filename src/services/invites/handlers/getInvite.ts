@@ -1,11 +1,14 @@
 import { Invite } from '../../../db';
-import * as validators from '../../../utils/validators';
+import { NotFoundError } from '../../../errors';
 
 const getInvite = async (code: string) => {
-  await validators.validate([validators.inviteCodeExists], { code });
+  const invite = await Invite.findByPk(code.toUpperCase());
 
-  // * Forcing type to Invite since an exception would be thrown by the validation if the invite was not found
-  return Invite.findByPk(code.toUpperCase()) as Promise<Invite>;
+  if (!invite) {
+    throw new NotFoundError();
+  }
+
+  return invite;
 };
 
 export default getInvite;

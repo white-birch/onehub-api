@@ -1,6 +1,5 @@
 import { array, string } from 'yup';
 import { Affiliate, Invite, Organization, Plan, User } from '../db';
-import { InviteType } from '../types';
 import ErrorCode from './errorCodes';
 
 export { default as validate } from './validate';
@@ -38,11 +37,7 @@ export const affiliateId = {
 };
 
 export const affiliateIds = {
-  affiliateIds: array()
-    .typeError(ErrorCode.AffiliateIdInvalid)
-    .min(1, ErrorCode.AffiliateIdInvalid)
-    .of(affiliateId.affiliateId)
-    .required(ErrorCode.AffiliateIdRequired),
+  affiliateIds: array().typeError(ErrorCode.AffiliateIdInvalid).of(affiliateId.affiliateId),
 };
 
 export const organizationId = {
@@ -81,51 +76,15 @@ export const userId = {
     .required(ErrorCode.UserIdRequired),
 };
 
-export const inviteCodeExists = {
-  code: string()
-    .typeError(ErrorCode.InviteCodeInvalid)
-    .test({
-      name: 'invite-code-in-use',
-      message: ErrorCode.InviteCodeInUse,
-      test: async (value) => !(await Invite.findByPk(value?.toUpperCase())),
-    })
-    .required(ErrorCode.InviteCodeRequired),
-};
-
 export const inviteCode = {
   code: string()
     .typeError(ErrorCode.InviteCodeInvalid)
     .test({
       name: 'valid-invite-code',
-      message: ErrorCode.InviteCodeInvalid,
-      test: async (value) => !!(await Invite.findByPk(value?.toUpperCase())),
-    })
-    .required(ErrorCode.InviteCodeRequired),
-};
-
-export const inviteType = {
-  type: string()
-    .typeError(ErrorCode.InviteTypeInvalid)
-    .test({
-      name: 'valid-invite-type',
-      message: ErrorCode.InviteTypeInvalid,
-      test: (value) => Object.values(InviteType).includes(value as InviteType),
-    })
-    .required(ErrorCode.InviteTypeRequired),
-};
-
-export const inviteId = {
-  id: string()
-    .typeError(ErrorCode.InviteIdInvalid)
-    .uuid(ErrorCode.InviteIdInvalid)
-    .test({
-      name: 'valid-invite-id',
-      message: ErrorCode.InviteIdInvalid,
+      message: ErrorCode.InviteCodeTaken,
       test: async function (value) {
-        if (this.parent.type === InviteType.Organization) return !!(await Organization.findByPk(value));
-        if (this.parent.type === InviteType.Affiliate) return !!(await Affiliate.findByPk(value));
-        return false;
+        return !(await Invite.findOne({ where: { code: value?.toUpperCase(), organizationId: this.parent.organizationId } }));
       },
     })
-    .required(ErrorCode.InviteIdRequired),
+    .required(ErrorCode.InviteCodeRequired),
 };

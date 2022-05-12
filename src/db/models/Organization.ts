@@ -1,5 +1,4 @@
 import { BelongsToMany, HasMany, Table } from 'sequelize-typescript';
-import { InviteType } from '../../types';
 import _Model from './_Model';
 import { Affiliate, Invite, OrganizationUser, OrganizationUserRole, User } from '.';
 
@@ -16,7 +15,7 @@ class Organization extends _Model<OrganizationAttributes> {
   @HasMany(() => OrganizationUserRole)
   userRoles: OrganizationUserRole[];
 
-  @HasMany(() => Invite, { foreignKey: 'id', scope: { type: InviteType.Organization }, constraints: false })
+  @HasMany(() => Invite)
   invites: Invite[];
 }
 

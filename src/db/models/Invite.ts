@@ -1,34 +1,22 @@
-import { BelongsTo, Column, CreatedAt, DataType, DeletedAt, Model, Table, UpdatedAt } from 'sequelize-typescript';
-import { Affiliate, Organization } from '.';
+import { BelongsTo, BelongsToMany, Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
+import _Model from './_Model';
+import { Affiliate, AffiliateInvite, Organization } from '.';
 
-import type { InviteType } from 'types';
 import type { InviteAttributes } from '.';
 
 @Table
-class Invite extends Model<InviteAttributes> {
-  @Column({ type: DataType.STRING, allowNull: false, primaryKey: true })
+class Invite extends _Model<InviteAttributes> {
+  @Column({ type: DataType.STRING, allowNull: false })
   code!: string;
 
-  @Column(DataType.STRING)
-  type!: InviteType;
+  @ForeignKey(() => Organization)
+  organizationId!: string;
 
-  @Column(DataType.UUID)
-  id!: string;
+  @BelongsTo(() => Organization)
+  organization!: Organization;
 
-  @BelongsTo(() => Organization, { foreignKey: 'id', constraints: false })
-  organization: Organization;
-
-  @BelongsTo(() => Affiliate, { foreignKey: 'id', constraints: false })
-  affiliate: Affiliate;
-
-  @CreatedAt
-  creationDate!: Date;
-
-  @UpdatedAt
-  updatedOn!: Date;
-
-  @DeletedAt
-  deletionDate!: Date;
+  @BelongsToMany(() => Affiliate, () => AffiliateInvite)
+  affiliates: Affiliate[];
 }
 
 export default Invite;
