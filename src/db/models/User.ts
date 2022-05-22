@@ -1,6 +1,6 @@
 import { BelongsToMany, Column, DataType, HasMany, Table } from 'sequelize-typescript';
 import { Role } from '../../types';
-import { Affiliate, AffiliateUser, AffiliateUserRole, Membership, Organization, OrganizationUser, OrganizationUserRole } from '.';
+import { Membership, Organization, OrganizationUser, OrganizationUserRole } from '.';
 import _Model from './_Model';
 
 import type { UserAttributes } from './User.types';
@@ -25,12 +25,6 @@ class User extends _Model<UserAttributes> {
   @BelongsToMany(() => Organization, () => OrganizationUser)
   organizations: Organization[];
 
-  @BelongsToMany(() => Affiliate, () => AffiliateUser)
-  affiliates: Affiliate[];
-
-  @HasMany(() => AffiliateUserRole)
-  affiliateUserRoles: AffiliateUserRole[];
-
   @HasMany(() => OrganizationUserRole)
   organizationUserRoles: OrganizationUserRole[];
 
@@ -53,17 +47,14 @@ class User extends _Model<UserAttributes> {
       .some((organizationUserRole) => organizationUserRole.role === Role.Admin);
   }
 
-  async isAffiliateUser(affiliateId: string) {
-    const affiliate = await Affiliate.findByPk(affiliateId, { include: [Organization] });
-    if (!affiliate) return false;
+  async isOrganizationUser(organizationId: string) {
+    if (this.isSuperUser) return true;
 
-    const affiliateUserRoles = await this.$get('affiliateUserRoles');
-    if (!affiliateUserRoles) return false;
+    const organizationUserRoles = await this.$get('organizationUserRoles');
 
-    const hasAffiliateUserRole = affiliateUserRoles.some((affiliateUserRole) => affiliateUserRole.affiliateId === affiliateId);
-    if (hasAffiliateUserRole) return true;
+    if (!organizationUserRoles) return false;
 
-    return this.isOrganizationAdmin(affiliate.organizationId);
+    return organizationUserRoles.some((organizationUserRole) => organizationUserRole.organizationId === organizationId);
   }
 }
 

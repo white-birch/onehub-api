@@ -4,9 +4,8 @@ import * as validators from '../../../utils/validators';
 import type { PlanAttributes } from '../../../db';
 
 const createPlan = async ({ id, ...data }: PlanAttributes) => {
-  await validators.validate([validators.affiliateId, validators.name], data);
-  const plan = new Plan(data);
-  return plan.save();
+  await validators.validate([validators.name], data);
+  return new Plan(data).save();
 };
 
 export default createPlan;

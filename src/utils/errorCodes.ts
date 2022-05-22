@@ -1,6 +1,6 @@
 enum ErrorCode {
-  AffiliateIdInvalid = 'AFFILIATE_ID_INVALID',
-  AffiliateIdRequired = 'AFFILIATE_ID_REQUIRED',
+  ApiKeyInvalid = 'API_KEY_INVALID',
+  ApiKeyRequired = 'API_KEY_REQUIRED',
   InviteCodeTaken = 'INVITE_CODE_TAKEN',
   InviteCodeInvalid = 'INVITE_CODE_INVALID',
   InviteCodeRequired = 'INVITE_CODE_REQUIRED',
@@ -21,7 +21,6 @@ enum ErrorCode {
   RolesRequired = 'ROLES_REQUIRED',
   UserIdInvalid = 'USER_ID_INVALID',
   UserIdRequired = 'USER_ID_REQUIRED',
-  UserCannotBeAddedToAffiliate = 'USER_CANNOT_BE_ADDED_TO_AFFILIATE',
 }
 
 export default ErrorCode;

@@ -1,13 +1,22 @@
-import { BelongsToMany, HasMany, Table } from 'sequelize-typescript';
+import { BelongsToMany, Column, DataType, HasMany, HasOne, Table } from 'sequelize-typescript';
 import _Model from './_Model';
-import { Affiliate, Invite, OrganizationUser, OrganizationUserRole, User } from '.';
+import { Address, Invite, OrganizationUser, OrganizationUserRole, Track, User } from '.';
 
 import type { OrganizationAttributes } from './Organization.types';
 
 @Table
 class Organization extends _Model<OrganizationAttributes> {
-  @HasMany(() => Affiliate)
-  affiliates: Affiliate[];
+  @Column({ type: DataType.STRING, allowNull: false })
+  name!: string;
+
+  @Column(DataType.STRING)
+  website: string;
+
+  @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, allowNull: false })
+  apiKey: string;
+
+  @HasOne(() => Address)
+  address: Address;
 
   @BelongsToMany(() => User, () => OrganizationUser)
   users: User[];
@@ -17,6 +26,9 @@ class Organization extends _Model<OrganizationAttributes> {
 
   @HasMany(() => Invite)
   invites: Invite[];
+
+  @HasMany(() => Track)
+  tracks: Track[];
 }
 
 export default Organization;

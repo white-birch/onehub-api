@@ -1,9 +1,4 @@
-export { default as Affiliate } from './Affiliate';
-export { default as AffiliateAddress } from './AffiliateAddress';
-export { default as AffiliateInvite } from './AffiliateInvite';
-export { default as AffiliateTrack } from './AffiliateTrack';
-export { default as AffiliateUser } from './AffiliateUser';
-export { default as AffiliateUserRole } from './AffiliateUserRole';
+export { default as Address } from './Address';
 export { default as Invite } from './Invite';
 export { default as Membership } from './Membership';
 export { default as Plan } from './Plan';
@@ -14,9 +9,7 @@ export { default as Track } from './Track';
 export { default as User } from './User';
 export { default as OrganizationUserRole } from './OrganizationUserRole';
 
-export * from './Affiliate.types';
-export * from './AffiliateAddress.types';
-export * from './AffiliateUserRole.types';
+export * from './Address.types';
 export * from './Invite.types';
 export * from './Membership.types';
 export * from './Plan.types';

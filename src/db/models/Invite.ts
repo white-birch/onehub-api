@@ -1,6 +1,6 @@
-import { BelongsTo, BelongsToMany, Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
+import { BelongsTo, Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
 import _Model from './_Model';
-import { Affiliate, AffiliateInvite, Organization } from '.';
+import { Organization } from '.';
 
 import type { InviteAttributes } from '.';
 
@@ -14,9 +14,6 @@ class Invite extends _Model<InviteAttributes> {
 
   @BelongsTo(() => Organization)
   organization!: Organization;
-
-  @BelongsToMany(() => Affiliate, () => AffiliateInvite)
-  affiliates: Affiliate[];
 }
 
 export default Invite;

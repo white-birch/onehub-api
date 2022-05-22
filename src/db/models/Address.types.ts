@@ -1,6 +1,6 @@
 import { Country, State } from 'types';
 
-export interface AffiliateAddressAttributes {
+export interface AddressAttributes {
   streetAddress: string;
   additionalStreetAddress: string;
   city: string;

@@ -10,7 +10,7 @@ const router = Router();
 
 router.post(
   '/invites',
-  authMiddleware([isOrganizationAdmin]),
+  // authMiddleware([isOrganizationAdmin]),
   nextOnError(async (req, res) => {
     const { payload } = httpContext.get('token') as TokenContext;
     const invite = await createInvite({ ...req.body, organizationId: payload.organizationId });

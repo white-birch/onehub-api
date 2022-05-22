@@ -1,5 +1,5 @@
-import { array, string } from 'yup';
-import { Affiliate, Invite, Organization, Plan, User } from '../db';
+import { string } from 'yup';
+import { Invite, Organization, Plan, User } from '../db';
 import ErrorCode from './errorCodes';
 
 export { default as validate } from './validate';
@@ -24,20 +24,8 @@ export const password = {
   password: string().typeError(ErrorCode.PasswordInvalid).matches(PASSWORD_REGEX, ErrorCode.PasswordInvalid).required(ErrorCode.PasswordRequired),
 };
 
-export const affiliateId = {
-  affiliateId: string()
-    .typeError(ErrorCode.AffiliateIdInvalid)
-    .uuid(ErrorCode.AffiliateIdInvalid)
-    .test({
-      name: 'valid-affiliate-id',
-      message: ErrorCode.AffiliateIdInvalid,
-      test: async (value) => !!(await Affiliate.findByPk(value)),
-    })
-    .required(ErrorCode.AffiliateIdRequired),
-};
-
-export const affiliateIds = {
-  affiliateIds: array().typeError(ErrorCode.AffiliateIdInvalid).min(1, ErrorCode.AffiliateIdInvalid).of(affiliateId.affiliateId),
+export const apiKey = {
+  apiKey: string().typeError(ErrorCode.ApiKeyInvalid).uuid(ErrorCode.ApiKeyInvalid).required(ErrorCode.ApiKeyRequired),
 };
 
 export const organizationId = {

@@ -1,11 +1,10 @@
-import { Invite, InviteInput } from '../../../db';
+import { Invite } from '../../../db';
 import * as validators from '../../../utils/validators';
 
-const createInvite = async ({ id, affiliateIds, ...data }: InviteInput) => {
-  await validators.validate([validators.inviteCode, validators.organizationId, validators.affiliateIds], { ...data, affiliateIds });
+const createInvite = async ({ id, ...data }: Invite) => {
+  await validators.validate([validators.inviteCode, validators.organizationId], data);
 
   const invite = await new Invite({ ...data, code: data.code.toUpperCase() }).save();
-  await invite.$set('affiliates', affiliateIds || null);
 
   return invite;
 };

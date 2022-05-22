@@ -1,4 +1,4 @@
-import { Affiliate, Invite } from '../../../db';
+import { Invite } from '../../../db';
 import { NotFoundError } from '../../../errors';
 import logger from '../../../utils/logger';
 import * as validators from '../../../utils/validators';
@@ -6,7 +6,7 @@ import * as validators from '../../../utils/validators';
 const getInvite = async (inviteId: string) => {
   await validators.validate(validators.id, { id: inviteId });
 
-  const invite = await Invite.findByPk(inviteId, { include: [Affiliate] });
+  const invite = await Invite.findByPk(inviteId);
 
   if (!invite) {
     logger.warn({ message: 'Invite not found', inviteId });

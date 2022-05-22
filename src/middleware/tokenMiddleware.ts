@@ -1,5 +1,5 @@
 import httpContext from 'express-http-context';
-import { AffiliateUserRole, OrganizationUserRole } from '../db';
+import { OrganizationUserRole } from '../db';
 import { getUser } from '../services/users/handlers';
 import { verifyToken } from '../utils/token';
 
@@ -17,7 +17,7 @@ const tokenMiddleware = async (req: Request, res: Response, next: NextFunction) 
 
     if (token) {
       const payload = await verifyToken(token);
-      const user = await getUser(payload.userId, { include: [AffiliateUserRole, OrganizationUserRole] });
+      const user = await getUser(payload.userId, { include: [OrganizationUserRole] });
       httpContext.set('token', { value: token, payload, user });
     }
   } catch {

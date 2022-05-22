@@ -3,7 +3,3 @@ export interface TrackAttributes {
   name: string;
   organizationId: string;
 }
-
-export interface TrackInput extends TrackAttributes {
-  affiliateIds?: string[];
-}

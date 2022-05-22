@@ -65,6 +65,11 @@ export enum State {
   WY = 'WY',
 }
 
+export interface ApiKeyContext {
+  apiKey: string;
+  organizationId: string;
+}
+
 export interface TokenContext {
   value: string;
   payload: JwtPayload;

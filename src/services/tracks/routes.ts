@@ -22,8 +22,8 @@ router.get(
   '/tracks',
   authMiddleware(),
   nextOnError(async (req, res) => {
-    const { payload, user } = httpContext.get('token') as TokenContext;
-    const tracks = await getTracks(payload.organizationId, user);
+    const { payload } = httpContext.get('token') as TokenContext;
+    const tracks = await getTracks(payload.organizationId);
     res.status(200).json(tracks);
   })
 );

@@ -1,11 +1,11 @@
 import { BelongsTo, Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
-import { Affiliate } from '.';
 import _Model from './_Model';
 
-import type { AffiliateAddressAttributes } from './AffiliateAddress.types';
+import type { AddressAttributes } from './Address.types';
+import Organization from './Organization';
 
 @Table
-class AffiliateAddress extends _Model<AffiliateAddressAttributes> {
+class Address extends _Model<AddressAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
   streetAddress!: string;
 
@@ -24,11 +24,11 @@ class AffiliateAddress extends _Model<AffiliateAddressAttributes> {
   @Column({ type: DataType.STRING, allowNull: false, defaultValue: 'US' })
   country!: string;
 
-  @ForeignKey(() => Affiliate)
-  affiliateId!: string;
+  @ForeignKey(() => Organization)
+  organizationId!: string;
 
-  @BelongsTo(() => Affiliate)
-  affiliate: Affiliate;
+  @BelongsTo(() => Organization)
+  organization: Organization;
 }
 
-export default AffiliateAddress;
+export default Address;
