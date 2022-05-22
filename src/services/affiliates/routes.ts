@@ -2,9 +2,9 @@ import { Router } from 'express';
 import httpContext from 'express-http-context';
 import { authMiddleware, nextOnError } from '../../middleware';
 import { isOrganizationAdmin } from '../../utils/auth';
-import { createAffiliate, deleteAffiliate, getAffiliate, getAffiliates, updateAffiliate } from './handlers';
+import { addUserToAffiliate, createAffiliate, deleteAffiliate, getAffiliate, getAffiliates, updateAffiliate } from './handlers';
 
-import type { TokenContext } from '../../types';
+import { Role, TokenContext } from '../../types';
 
 const router = Router();
 
@@ -32,8 +32,11 @@ router.post(
   '/affiliates',
   authMiddleware([isOrganizationAdmin]),
   nextOnError(async (req, res) => {
-    const { payload } = httpContext.get('token') as TokenContext;
+    const { payload, user } = httpContext.get('token') as TokenContext;
+
     const affiliate = await createAffiliate({ ...req.body, organizationId: payload.organizationId });
+    await addUserToAffiliate(affiliate, user, Role.Admin);
+
     res.status(201).json(affiliate);
   })
 );

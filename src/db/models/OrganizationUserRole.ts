@@ -2,13 +2,13 @@ import { BelongsTo, Column, DataType, ForeignKey, Table } from 'sequelize-typesc
 import { Organization, User } from '.';
 import _Model from './_Model';
 
-import type { OrganizationRole } from 'types';
+import type { Role } from 'types';
 import type { OrganizationUserRoleAttributes } from './OrganizationUserRole.types';
 
 @Table
 class OrganizationUserRole extends _Model<OrganizationUserRoleAttributes> {
   @Column({ type: DataType.STRING, allowNull: false })
-  role: OrganizationRole;
+  role: Role;
 
   @ForeignKey(() => Organization)
   organizationId!: string;

@@ -1,8 +1,8 @@
-import { OrganizationRole } from 'types';
+import { Role } from 'types';
 
 export interface OrganizationUserRoleAttributes {
   id?: string;
   organizationId: string;
   userId: string;
-  role: OrganizationRole;
+  role: Role;
 }

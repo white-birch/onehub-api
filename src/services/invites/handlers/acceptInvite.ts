@@ -1,13 +1,13 @@
 import { Affiliate, Organization } from '../../../db';
 import { addUserToAffiliate } from '../../../services/affiliates/handlers';
-import { AffiliateRole } from '../../../types';
+import { Role } from '../../../types';
 
 import type { User } from 'db';
 import findInvite from './findInvite';
 
 const acceptAffiliateInvite = async (user: User, affiliates: Affiliate[]): Promise<void> => {
   for (const affiliate of affiliates) {
-    await addUserToAffiliate(affiliate, user, AffiliateRole.Member);
+    await addUserToAffiliate(affiliate, user, Role.Member);
   }
 };
 

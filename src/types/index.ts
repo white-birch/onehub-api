@@ -5,13 +5,10 @@ export enum Country {
   US = 'US',
 }
 
-export enum AffiliateRole {
+export enum Role {
+  Admin = 'ADMIN',
   Employee = 'EMPLOYEE',
   Member = 'MEMBER',
-}
-
-export enum OrganizationRole {
-  Admin = 'ADMIN',
 }
 
 export enum State {

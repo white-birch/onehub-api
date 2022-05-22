@@ -1,8 +1,8 @@
-import { AffiliateRole } from 'types';
+import { Role } from 'types';
 
 export interface AffiliateUserRoleAttributes {
   id?: string;
   affiliateId: string;
   userId: string;
-  role: AffiliateRole;
+  role: Role;
 }

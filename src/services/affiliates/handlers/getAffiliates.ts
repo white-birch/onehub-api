@@ -10,7 +10,7 @@ const getAffiliates = async (organizationId: string, user: User) => {
 
   const { affiliates } = await getOrganization(organizationId, { include: [Affiliate] });
 
-  return filterAsync<Affiliate>(affiliates, (affiliate) => user.isAffiliateUser(affiliate.id));
+  return (await user.isOrganizationAdmin(organizationId)) ? affiliates : filterAsync(affiliates, (affiliate) => user.isAffiliateUser(affiliate.id));
 };
 
 export default getAffiliates;

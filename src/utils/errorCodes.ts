@@ -21,6 +21,7 @@ enum ErrorCode {
   RolesRequired = 'ROLES_REQUIRED',
   UserIdInvalid = 'USER_ID_INVALID',
   UserIdRequired = 'USER_ID_REQUIRED',
+  UserCannotBeAddedToAffiliate = 'USER_CANNOT_BE_ADDED_TO_AFFILIATE',
 }
 
 export default ErrorCode;
