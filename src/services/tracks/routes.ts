@@ -32,7 +32,8 @@ router.post(
   '/tracks',
   authMiddleware([isOrganizationAdmin]),
   nextOnError(async (req, res) => {
-    const track = await createTrack(req.body);
+    const { payload } = httpContext.get('token') as TokenContext;
+    const track = await createTrack({ ...req.body, organizationId: payload.organizationId });
     res.status(201).json(track);
   })
 );
