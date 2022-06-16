@@ -3,12 +3,10 @@ import { NotFoundError } from '../../../errors';
 import logger from '../../../utils/logger';
 import * as validators from '../../../utils/validators';
 
-type Options = Parameters<typeof Organization.findByPk>[1];
-
-const getOrganization = async (organizationId: string, options?: Options) => {
+const getOrganization = async (organizationId: string) => {
   await validators.validate(validators.id, { id: organizationId });
 
-  const organization = await Organization.findByPk(organizationId, options);
+  const organization = await Organization.findByPk(organizationId);
 
   if (!organization) {
     logger.warn({ message: 'Organization not found', organizationId });

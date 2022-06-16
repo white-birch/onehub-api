@@ -1,9 +1,9 @@
 import * as validators from '../../../utils/validators';
 import getInvite from './getInvite';
 
-import type { Invite } from 'db';
+import type { InviteAttributes } from 'db';
 
-const updateInvite = async (inviteId: string, { id, ...data }: Invite) => {
+const updateInvite = async (inviteId: string, { id, ...data }: InviteAttributes) => {
   await validators.validate([validators.inviteCode, validators.organizationId], {
     ...data,
     id: inviteId, // * Adding id in so that the inviteCode validation logic will allow for the duplicate inviteCode

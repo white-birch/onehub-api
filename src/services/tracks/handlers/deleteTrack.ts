@@ -1,9 +1,7 @@
 import getTrack from './getTrack';
 
-import type { User } from '../../../db';
-
-const deleteTrack = async (trackId: string, user: User) => {
-  const track = await getTrack(trackId, user);
+const deleteTrack = async (trackId: string, organizationId: string) => {
+  const track = await getTrack(trackId, organizationId);
   await track.destroy();
 };
 

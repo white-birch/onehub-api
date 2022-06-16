@@ -1,58 +1,63 @@
 import { Router } from 'express';
 import httpContext from 'express-http-context';
-import { nextOnError } from '../../middleware';
-import { signIn, signUp } from './handlers';
+import { authMiddleware, nextOnError } from '../../middleware';
+import { Role } from '../../types';
+import { isOrganizationAdmin } from '../../utils/auth';
+import { addUserToOrganization, getOrganization } from '../organizations/handlers';
+import { createUser, deleteUser, getUser, getUsers, updateUser } from './handlers';
 
-import type { ApiKeyContext, TokenContext } from 'types';
-
-const COOKIE_OPTIONS = Object.freeze({ httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+import type { TokenContext } from 'types';
 
 const router = Router();
 
 router.get(
-  '/auth/me',
+  '/users/:userId',
+  authMiddleware([isOrganizationAdmin]),
   nextOnError(async (req, res) => {
-    try {
-      const { value: token, payload } = (httpContext.get('token') as TokenContext | undefined) || {};
+    const { payload } = httpContext.get('token') as TokenContext;
+    const user = await getUser(req.params.userId, payload.organizationId);
+    res.status(200).json(user);
+  })
+);
 
-      if (!token) {
-        res.status(200).json({});
-        return;
-      }
-
-      res.status(200).json({ token, ...payload });
-    } catch (error) {
-      res.clearCookie('token', COOKIE_OPTIONS);
-      throw error;
-    }
+router.get(
+  '/users',
+  authMiddleware([isOrganizationAdmin]),
+  nextOnError(async (req, res) => {
+    const { payload } = httpContext.get('token') as TokenContext;
+    const users = await getUsers(payload.organizationId);
+    res.status(200).json(users);
   })
 );
 
 router.post(
-  '/auth/sign-in',
+  '/users',
+  authMiddleware([isOrganizationAdmin]),
   nextOnError(async (req, res) => {
-    const { organizationId } = httpContext.get('apiKey') as ApiKeyContext;
-    const { email, password } = req.body;
-    const { token, user } = await signIn(email, password, organizationId);
-    res.status(200).cookie('token', token, COOKIE_OPTIONS).json({ token, user });
+    const { payload } = httpContext.get('token') as TokenContext;
+    const [organization, user] = await Promise.all([getOrganization(payload.organizationid), createUser(req.body)]);
+    await addUserToOrganization(organization, user, Role.Member);
+    res.status(201).json(user);
   })
 );
 
-router.post(
-  '/auth/sign-out',
+router.put(
+  '/users/:userId',
+  authMiddleware([isOrganizationAdmin]),
   nextOnError(async (req, res) => {
-    res.clearCookie('token', COOKIE_OPTIONS).status(200).end();
+    const { payload } = httpContext.get('token') as TokenContext;
+    const user = await updateUser(req.params.userId, req.body, payload.organizationId);
+    res.status(200).json(user);
   })
 );
 
-router.post(
-  '/auth/sign-up',
+router.delete(
+  '/users/:userId',
+  authMiddleware([isOrganizationAdmin]),
   nextOnError(async (req, res) => {
-    const { organizationId } = httpContext.get('apiKey') as ApiKeyContext;
-    const { email, password, inviteCode } = req.body;
-    const { token, user } = await signUp(email, password, { inviteCode, organizationId });
-
-    res.status(201).cookie('token', token, COOKIE_OPTIONS).json({ token, user });
+    const { payload } = httpContext.get('token') as TokenContext;
+    await deleteUser(req.params.userId, payload.organizationId);
+    res.sendStatus(200);
   })
 );
 

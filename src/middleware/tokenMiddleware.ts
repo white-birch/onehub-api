@@ -1,6 +1,5 @@
 import httpContext from 'express-http-context';
-import { OrganizationUserRole } from '../db';
-import { getUser } from '../services/users/handlers';
+import { OrganizationUserRole, User } from '../db';
 import { verifyToken } from '../utils/token';
 
 import type { NextFunction, Request, Response } from 'express';
@@ -17,7 +16,7 @@ const tokenMiddleware = async (req: Request, res: Response, next: NextFunction) 
 
     if (token) {
       const payload = await verifyToken(token);
-      const user = await getUser(payload.userId, { include: [OrganizationUserRole] });
+      const user = await User.findByPk(payload.userId, { include: [OrganizationUserRole] });
       httpContext.set('token', { value: token, payload, user });
     }
   } catch {

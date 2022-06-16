@@ -12,8 +12,8 @@ router.get(
   '/tracks/:trackId',
   authMiddleware(),
   nextOnError(async (req, res) => {
-    const { user } = httpContext.get('token') as TokenContext;
-    const track = await getTrack(req.params.trackId, user);
+    const { payload } = httpContext.get('token') as TokenContext;
+    const track = await getTrack(req.params.trackId, payload.organizationId);
     res.status(200).json(track);
   })
 );
@@ -42,8 +42,8 @@ router.put(
   '/tracks/:trackId',
   authMiddleware([isOrganizationAdmin]),
   nextOnError(async (req, res) => {
-    const { user } = httpContext.get('token') as TokenContext;
-    const track = await updateTrack(req.params.trackId, req.body, user);
+    const { payload } = httpContext.get('token') as TokenContext;
+    const track = await updateTrack(req.params.trackId, req.body, payload.organizationId);
     res.status(200).json(track);
   })
 );
@@ -52,8 +52,8 @@ router.delete(
   '/tracks/:trackId',
   authMiddleware([isOrganizationAdmin]),
   nextOnError(async (req, res) => {
-    const { user } = httpContext.get('token') as TokenContext;
-    await deleteTrack(req.params.trackId, user);
+    const { payload } = httpContext.get('token') as TokenContext;
+    await deleteTrack(req.params.trackId, payload.organizationId);
     res.sendStatus(200);
   })
 );
